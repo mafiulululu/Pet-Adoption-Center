@@ -10,4 +10,21 @@ CREATE TABLE users (
     updated_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP ON UPDATE CURRENT_TIMESTAMP
 );
 
+CREATE TABLE pets (
+    pet_id INT AUTO_INCREMENT PRIMARY KEY,
+    name VARCHAR(100) NOT NULL,
+    species VARCHAR(50) NOT NULL,
+    breed VARCHAR(50),
+    age INT,
+    gender ENUM('male', 'female'),
+    color VARCHAR(50),
+    health_status VARCHAR(100),
+    adoption_status ENUM('available', 'pending', 'adopted') DEFAULT 'available',
+    description TEXT,
+    added_by INT,
+    created_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP,
+    updated_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP ON UPDATE CURRENT_TIMESTAMP,
+    FOREIGN KEY (added_by) REFERENCES users(user_id)
+);
+
 
