@@ -27,4 +27,13 @@ CREATE TABLE pets (
     FOREIGN KEY (added_by) REFERENCES users(user_id)
 );
 
+CREATE TABLE login_logs (
+    log_id INT AUTO_INCREMENT PRIMARY KEY,
+    user_id INT NOT NULL,
+    login_time TIMESTAMP DEFAULT CURRENT_TIMESTAMP,
+    logout_time TIMESTAMP NULL,
+    ip_address VARCHAR(45),
+    FOREIGN KEY (user_id) REFERENCES users(user_id) ON DELETE CASCADE
+);
+
 
