@@ -35,5 +35,26 @@ CREATE TABLE login_logs (
     ip_address VARCHAR(45),
     FOREIGN KEY (user_id) REFERENCES users(user_id) ON DELETE CASCADE
 );
+CREATE TABLE user_profiles (
+    profile_id INT AUTO_INCREMENT PRIMARY KEY,
+    user_id INT NOT NULL,
+    address VARCHAR(255),
+    date_of_birth DATE,
+    profile_image VARCHAR(255),
+    bio TEXT,
+    FOREIGN KEY (user_id) REFERENCES users(user_id) ON DELETE CASCADE
+);
+
+CREATE TABLE pet_care_status (
+    care_id INT AUTO_INCREMENT PRIMARY KEY,
+    pet_id INT NOT NULL,
+    worker_id INT NOT NULL,
+    feeding_status VARCHAR(100),
+    health_notes TEXT,
+    last_checkup_date DATE,
+    updated_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP ON UPDATE CURRENT_TIMESTAMP,
+    FOREIGN KEY (pet_id) REFERENCES pets(pet_id) ON DELETE CASCADE,
+    FOREIGN KEY (worker_id) REFERENCES users(user_id) ON DELETE CASCADE
+);
 
 
