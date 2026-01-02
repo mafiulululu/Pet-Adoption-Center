@@ -59,6 +59,7 @@ document.addEventListener('DOMContentLoaded', () => {
             }
         });
     });
+});
 
   // ===============================
 // LOGIN FORM SUBMIT (FINAL VERSION)
@@ -66,6 +67,7 @@ document.addEventListener('DOMContentLoaded', () => {
 document.addEventListener('DOMContentLoaded', function () {
 
     const loginForm = document.getElementById('loginForm');
+    const signupForm = document.getElementById('signupForm');
 
     if (loginForm) {
         loginForm.addEventListener('submit', function (e) {
@@ -113,52 +115,60 @@ document.addEventListener('DOMContentLoaded', function () {
             });
         });
     }
-});
-
-
-    handleForm('loginForm', 'login');
-    handleForm('signupForm', 'signup');
-});
-// ===============================
-// SIGN UP FORM SUBMIT (AJAX FIX)
-// ===============================
-document.addEventListener('DOMContentLoaded', function () {
-
-    const signupForm = document.getElementById('signupForm');
 
     if (signupForm) {
-        signupForm.addEventListener('submit', function (e) {
-            e.preventDefault(); // ⛔ stop normal form submit
+            signupForm.addEventListener('submit', function (e) {
+                e.preventDefault();
 
-            const formData = new FormData(signupForm);
+                const btn = signupForm.querySelector('button[type="submit"]');
+                const originalText = btn.textContent;
 
-            fetch('login.php', {
-                method: 'POST',
-                body: formData
-            })
-            .then(response => response.json())
-            .then(data => {
+                btn.disabled = true;
+                btn.textContent = 'Signing Up...';
 
-                // Clear previous errors
-                document.getElementById('signupNameError').innerText = '';
-                document.getElementById('signupEmailError').innerText = '';
-                document.getElementById('signupPasswordError').innerText = '';
-                document.getElementById('signupConfirmError').innerText = '';
+                const formData = new FormData(signupForm);
 
-                if (data.success) {
-                    alert(data.message);
-                    window.location.href = 'dashboard.php'; // change if needed
-                } else {
-                    document.getElementById('signupNameError').innerText = data.nameError;
-                    document.getElementById('signupEmailError').innerText = data.emailError;
-                    document.getElementById('signupPasswordError').innerText = data.passwordError;
-                    document.getElementById('signupConfirmError').innerText = data.confirmError;
-                }
-            })
-            .catch(error => {
-                console.error('Error:', error);
+                fetch('login.php', {
+                    method: 'POST',
+                    body: formData
+                })
+                .then(response => {
+                    if (!response.ok) {
+                        throw new Error('Network error');
+                    }
+                    return response.json();
+                })
+                .then(data => {
+
+                    // Clear previous errors
+                    document.getElementById('signupNameError').innerText = '';
+                    document.getElementById('signupEmailError').innerText = '';
+                    document.getElementById('signupPasswordError').innerText = '';
+                    document.getElementById('signupConfirmError').innerText = '';
+
+                    if (data.success) {
+                        alert(data.message);
+                        window.location.href = 'dashboard.php';
+                    } else {
+                        document.getElementById('signupNameError').innerText = data.nameError;
+                        document.getElementById('signupEmailError').innerText = data.emailError;
+                        document.getElementById('signupPasswordError').innerText = data.passwordError;
+                        document.getElementById('signupConfirmError').innerText = data.confirmError;
+
+                        // If there is a general error message (like DB failure) and no specific field errors
+                        if (data.message && !data.nameError && !data.emailError && !data.passwordError && !data.confirmError) {
+                            alert(data.message);
+                        }
+                    }
+                })
+                .catch(error => {
+                    console.error(error);
+                    alert('An error occurred. Please try again.');
+                })
+                .finally(() => {
+                    btn.disabled = false;
+                    btn.textContent = originalText;
+                });
             });
-        });
     }
 });
-// ===============================

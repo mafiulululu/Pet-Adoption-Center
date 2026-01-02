@@ -32,8 +32,6 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
             $hasError = true;
         } elseif (strlen($name) < 2) {
 
-            $response['nameError'] = 'Name must be at least 4 characters';
-
             $response['nameError'] = 'Name must be at least 2 characters';
 
             $hasError = true;
@@ -82,6 +80,13 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
         $role = 'client';
         $status = 'active';
         $stmt = $conn->prepare("INSERT INTO users (full_name, email, password_hash, role, status) VALUES (?, ?, ?, ?, ?)");
+        
+        if (!$stmt) {
+            $response['message'] = 'Database prepare error: ' . $conn->error;
+            echo json_encode($response);
+            exit;
+        }
+
         $stmt->bind_param("sssss", $name, $email, $hashed, $role, $status);
 
         if ($stmt->execute()) {
@@ -92,7 +97,7 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
             $_SESSION['user_email'] = $email;
             $_SESSION['user_role'] = $role;
         } else {
-            $response['message'] = 'Registration failed';
+            $response['message'] = 'Registration failed: ' . $stmt->error;
         }
         $stmt->close();
         $conn->close();
