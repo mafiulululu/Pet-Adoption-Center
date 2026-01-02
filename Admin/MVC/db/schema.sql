@@ -35,5 +35,14 @@ CREATE TABLE login_logs (
     ip_address VARCHAR(45),
     FOREIGN KEY (user_id) REFERENCES users(user_id) ON DELETE CASCADE
 );
+CREATE TABLE user_profiles (
+    profile_id INT AUTO_INCREMENT PRIMARY KEY,
+    user_id INT NOT NULL,
+    address VARCHAR(255),
+    date_of_birth DATE,
+    profile_image VARCHAR(255),
+    bio TEXT,
+    FOREIGN KEY (user_id) REFERENCES users(user_id) ON DELETE CASCADE
+);
 
 
