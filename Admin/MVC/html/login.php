@@ -381,4 +381,3 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
     <script src="script.js?v=1.1"></script>
 </body>
 
-</html>
