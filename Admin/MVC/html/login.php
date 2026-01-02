@@ -3,23 +3,98 @@ session_start();
 
 // Handle AJAX Login Request
 if ($_SERVER['REQUEST_METHOD'] === 'POST') {
-    // Start output buffering to catch any unwanted output (like from db_conn.php)
-    ob_start();
-    
     header('Content-Type: application/json');
     
     // Database connection
     require_once '../db/db_conn.php'; 
-    
-    // Clean the buffer to remove "Connected successfully" message
-    ob_clean(); 
 
     $response = [
         'success' => false,
         'emailError' => '',
         'passwordError' => '',
+        'nameError' => '',
+        'confirmError' => '',
         'message' => ''
     ];
+
+    $action = $_POST['action'] ?? 'login';
+
+    if ($action === 'register') {
+        $name = isset($_POST['name']) ? trim($_POST['name']) : '';
+        $email = isset($_POST['email']) ? trim($_POST['email']) : '';
+        $password = isset($_POST['password']) ? $_POST['password'] : '';
+        $confirm_password = isset($_POST['confirm_password']) ? $_POST['confirm_password'] : '';
+
+        $hasError = false;
+
+        if (empty($name)) {
+            $response['nameError'] = 'Name is required';
+            $hasError = true;
+        } elseif (strlen($name) < 2) {
+            $response['nameError'] = 'Name must be at least 2 characters';
+            $hasError = true;
+        }
+
+        if (empty($email)) {
+            $response['emailError'] = 'Email is required';
+            $hasError = true;
+        } elseif (!filter_var($email, FILTER_VALIDATE_EMAIL)) {
+            $response['emailError'] = 'Invalid email format';
+            $hasError = true;
+        }
+
+        if (empty($password)) {
+            $response['passwordError'] = 'Password is required';
+            $hasError = true;
+        } elseif (strlen($password) < 6) {
+            $response['passwordError'] = 'Password must be at least 6 characters';
+            $hasError = true;
+        }
+
+        if ($password !== $confirm_password) {
+            $response['confirmError'] = 'Passwords do not match';
+            $hasError = true;
+        }
+
+        if ($hasError) {
+            echo json_encode($response);
+            exit;
+        }
+
+        // Check if email exists
+        $stmt = $conn->prepare("SELECT user_id FROM users WHERE email = ?");
+        $stmt->bind_param("s", $email);
+        $stmt->execute();
+        $stmt->store_result();
+        if ($stmt->num_rows > 0) {
+            $response['emailError'] = 'Email already exists';
+            echo json_encode($response);
+            exit;
+        }
+        $stmt->close();
+
+        // Insert User
+        $hashed = password_hash($password, PASSWORD_DEFAULT);
+        $role = 'client';
+        $status = 'active';
+        $stmt = $conn->prepare("INSERT INTO users (full_name, email, password_hash, role, status) VALUES (?, ?, ?, ?, ?)");
+        $stmt->bind_param("sssss", $name, $email, $hashed, $role, $status);
+
+        if ($stmt->execute()) {
+            $response['success'] = true;
+            $response['message'] = 'Registration successful';
+            $_SESSION['user_id'] = $stmt->insert_id;
+            $_SESSION['user_name'] = $name;
+            $_SESSION['user_email'] = $email;
+            $_SESSION['user_role'] = $role;
+        } else {
+            $response['message'] = 'Registration failed';
+        }
+        $stmt->close();
+        $conn->close();
+        echo json_encode($response);
+        exit;
+    }
 
     $email = isset($_POST['email']) ? trim($_POST['email']) : '';
     $password = isset($_POST['password']) ? $_POST['password'] : '';
@@ -167,6 +242,7 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
                     </div>
 
                     <form id="loginForm" action="login.php" method="POST">
+                        <input type="hidden" name="action" value="login">
                         <div class="input-group">
                             <label for="login-email" class="input-label">Email Address</label>
                             <div class="input-wrapper">
@@ -214,7 +290,8 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
                         <p class="form-subtitle">Join us to start your pet adoption journey</p>
                     </div>
 
-                    <form id="signupForm" action="register.php" method="POST">
+                    <form id="signupForm" action="login.php" method="POST">
+                        <input type="hidden" name="action" value="register">
                         <div class="input-group">
                             <label for="signup-name" class="input-label">Full Name</label>
                             <div class="input-wrapper">
