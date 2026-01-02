@@ -1,23 +1,12 @@
 <?php
+$host = "localhost";
+$user = "root";        // change if needed
+$pass = "";            // change if needed
+$db   = "pet_adoption"; // your database name
 
-$host="localhost"; // Server name
+$conn = new mysqli($host, $user, $pass, $db);
 
-$user="root";  // Username of the DB
-
-$pass="";  // Password if any
-
-$dbname="pet-adoption-center"; //Database name
-
-// create the connectiin
-
- 
-
-$conn= new mysqli($host,$user,$pass,$dbname);
-
-if ($conn->connect_error)
-
-{
-
-    die("Connect Error: " . $conn->connect_error);
+if ($conn->connect_error) {
+    die("Database Connection Failed: " . $conn->connect_error);
 }
 ?>
