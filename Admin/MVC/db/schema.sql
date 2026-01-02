@@ -26,6 +26,7 @@ CREATE TABLE pets (
     updated_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP ON UPDATE CURRENT_TIMESTAMP,
     FOREIGN KEY (added_by) REFERENCES users(user_id)
 );
+<<<<<<< Updated upstream
 
 CREATE TABLE login_logs (
     log_id INT AUTO_INCREMENT PRIMARY KEY,
@@ -44,6 +45,21 @@ CREATE TABLE user_profiles (
     bio TEXT,
     FOREIGN KEY (user_id) REFERENCES users(user_id) ON DELETE CASCADE
 );
+<<<<<<< HEAD
+
+CREATE TABLE pet_care_status (
+    care_id INT AUTO_INCREMENT PRIMARY KEY,
+    pet_id INT NOT NULL,
+    worker_id INT NOT NULL,
+    feeding_status VARCHAR(100),
+    health_notes TEXT,
+    last_checkup_date DATE,
+    updated_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP ON UPDATE CURRENT_TIMESTAMP,
+    FOREIGN KEY (pet_id) REFERENCES pets(pet_id) ON DELETE CASCADE,
+    FOREIGN KEY (worker_id) REFERENCES users(user_id) ON DELETE CASCADE
+);
+=======
+>>>>>>> feature/T-03
 
 CREATE TABLE pet_care_status (
     care_id INT AUTO_INCREMENT PRIMARY KEY,
@@ -57,4 +73,6 @@ CREATE TABLE pet_care_status (
     FOREIGN KEY (worker_id) REFERENCES users(user_id) ON DELETE CASCADE
 );
 
+=======
+>>>>>>> Stashed changes
 

@@ -31,7 +31,11 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
             $response['nameError'] = 'Name is required';
             $hasError = true;
         } elseif (strlen($name) < 2) {
+<<<<<<< HEAD
             $response['nameError'] = 'Name must be at least 4 characters';
+=======
+            $response['nameError'] = 'Name must be at least 2 characters';
+>>>>>>> feature/T-03
             $hasError = true;
         }
 
