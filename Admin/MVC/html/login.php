@@ -3,16 +3,10 @@ session_start();
 
 // Handle AJAX Login Request
 if ($_SERVER['REQUEST_METHOD'] === 'POST') {
-    // Start output buffering to catch any unwanted output (like from db_conn.php)
-    ob_start();
-    
     header('Content-Type: application/json');
     
     // Database connection
     require_once '../db/db_conn.php'; 
-    
-    // Clean the buffer to remove "Connected successfully" message
-    ob_clean(); 
 
     $response = [
         'success' => false,
