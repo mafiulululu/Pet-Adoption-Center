@@ -23,11 +23,6 @@ document.addEventListener('DOMContentLoaded', () => {
                 form.classList.remove('active');
             }
         });
-
-        // Update URL to reflect current tab
-        const url = new URL(window.location);
-        url.searchParams.set('tab', tabId);
-        window.history.pushState({}, '', url);
     }
 
     // Click event for tabs
@@ -65,53 +60,105 @@ document.addEventListener('DOMContentLoaded', () => {
         });
     });
 
-    // ===========================
-    // AJAX FORM SUBMISSION
-    // ===========================
-    const handleForm = (formId, errorPrefix) => {
-        const form = document.getElementById(formId);
-        if (!form) return;
+  // ===============================
+// LOGIN FORM SUBMIT (FINAL VERSION)
+// ===============================
+document.addEventListener('DOMContentLoaded', function () {
 
-        form.addEventListener('submit', async (e) => {
+    const loginForm = document.getElementById('loginForm');
+
+    if (loginForm) {
+        loginForm.addEventListener('submit', function (e) {
             e.preventDefault();
-            
-            // Clear previous errors
-            document.querySelectorAll('.error-msg').forEach(el => el.textContent = '');
-            
-            const btn = form.querySelector('button[type="submit"]');
-            const originalText = btn.textContent;
-            btn.disabled = true;
-            btn.textContent = 'Processing...';
 
-            try {
-                const formData = new FormData(form);
-                const response = await fetch('login.php', {
-                    method: 'POST',
-                    body: formData
-                });
-                
-                const data = await response.json();
+            const btn = loginForm.querySelector('button[type="submit"]');
+            const originalText = btn.textContent;
+
+            btn.disabled = true;
+            btn.textContent = 'Signing In...';
+
+            const formData = new FormData(loginForm);
+
+            fetch('login.php', {
+                method: 'POST',
+                body: formData
+            })
+            .then(response => {
+                if (!response.ok) {
+                    throw new Error('Network error');
+                }
+                return response.json();
+            })
+            .then(data => {
+
+                // Clear previous errors
+                document.getElementById('loginEmailError').innerText = '';
+                document.getElementById('loginPasswordError').innerText = '';
 
                 if (data.success) {
-                    window.location.href = 'dashboard.php'; // Redirect on success
+                    // ✅ SUCCESS → REDIRECT TO DASHBOARD
+                    window.location.href = 'dashboard.php';
                 } else {
-                    // Display errors
-                    if (data.emailError) document.getElementById(`${errorPrefix}EmailError`).textContent = data.emailError;
-                    if (data.passwordError) document.getElementById(`${errorPrefix}PasswordError`).textContent = data.passwordError;
-                    if (data.nameError) document.getElementById(`${errorPrefix}NameError`).textContent = data.nameError;
-                    if (data.confirmError) document.getElementById(`${errorPrefix}ConfirmError`).textContent = data.confirmError;
-                    if (data.message && !data.emailError && !data.passwordError) alert(data.message);
+                    document.getElementById('loginEmailError').innerText = data.emailError || '';
+                    document.getElementById('loginPasswordError').innerText = data.passwordError || '';
                 }
-            } catch (error) {
-                console.error('Error:', error);
+            })
+            .catch(error => {
+                console.error(error);
                 alert('An error occurred. Please try again.');
-            } finally {
+            })
+            .finally(() => {
                 btn.disabled = false;
                 btn.textContent = originalText;
-            }
+            });
         });
-    };
+    }
+});
+
 
     handleForm('loginForm', 'login');
     handleForm('signupForm', 'signup');
 });
+// ===============================
+// SIGN UP FORM SUBMIT (AJAX FIX)
+// ===============================
+document.addEventListener('DOMContentLoaded', function () {
+
+    const signupForm = document.getElementById('signupForm');
+
+    if (signupForm) {
+        signupForm.addEventListener('submit', function (e) {
+            e.preventDefault(); // ⛔ stop normal form submit
+
+            const formData = new FormData(signupForm);
+
+            fetch('login.php', {
+                method: 'POST',
+                body: formData
+            })
+            .then(response => response.json())
+            .then(data => {
+
+                // Clear previous errors
+                document.getElementById('signupNameError').innerText = '';
+                document.getElementById('signupEmailError').innerText = '';
+                document.getElementById('signupPasswordError').innerText = '';
+                document.getElementById('signupConfirmError').innerText = '';
+
+                if (data.success) {
+                    alert(data.message);
+                    window.location.href = 'dashboard.php'; // change if needed
+                } else {
+                    document.getElementById('signupNameError').innerText = data.nameError;
+                    document.getElementById('signupEmailError').innerText = data.emailError;
+                    document.getElementById('signupPasswordError').innerText = data.passwordError;
+                    document.getElementById('signupConfirmError').innerText = data.confirmError;
+                }
+            })
+            .catch(error => {
+                console.error('Error:', error);
+            });
+        });
+    }
+});
+// ===============================

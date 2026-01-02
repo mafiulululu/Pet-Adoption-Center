@@ -19,7 +19,83 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
 
     $action = $_POST['action'] ?? 'login';
 
-    if ($action === 'login') {
+    if ($action === 'register') {
+        $name = isset($_POST['name']) ? trim($_POST['name']) : '';
+        $email = isset($_POST['email']) ? trim($_POST['email']) : '';
+        $password = isset($_POST['password']) ? $_POST['password'] : '';
+        $confirm_password = isset($_POST['confirm_password']) ? $_POST['confirm_password'] : '';
+
+        $hasError = false;
+
+        if (empty($name)) {
+            $response['nameError'] = 'Name is required';
+            $hasError = true;
+        } elseif (strlen($name) < 2) {
+            $response['nameError'] = 'Name must be at least 2 characters';
+            $hasError = true;
+        }
+
+        if (empty($email)) {
+            $response['emailError'] = 'Email is required';
+            $hasError = true;
+        } elseif (!filter_var($email, FILTER_VALIDATE_EMAIL)) {
+            $response['emailError'] = 'Invalid email format';
+            $hasError = true;
+        }
+
+        if (empty($password)) {
+            $response['passwordError'] = 'Password is required';
+            $hasError = true;
+        } elseif (strlen($password) < 6) {
+            $response['passwordError'] = 'Password must be at least 6 characters';
+            $hasError = true;
+        }
+
+        if ($password !== $confirm_password) {
+            $response['confirmError'] = 'Passwords do not match';
+            $hasError = true;
+        }
+
+        if ($hasError) {
+            echo json_encode($response);
+            exit;
+        }
+
+        // Check if email exists
+        $stmt = $conn->prepare("SELECT user_id FROM users WHERE email = ?");
+        $stmt->bind_param("s", $email);
+        $stmt->execute();
+        $stmt->store_result();
+        if ($stmt->num_rows > 0) {
+            $response['emailError'] = 'Email already exists';
+            echo json_encode($response);
+            exit;
+        }
+        $stmt->close();
+
+        // Insert User
+        $hashed = password_hash($password, PASSWORD_DEFAULT);
+        $role = 'client';
+        $status = 'active';
+        $stmt = $conn->prepare("INSERT INTO users (full_name, email, password_hash, role, status) VALUES (?, ?, ?, ?, ?)");
+        $stmt->bind_param("sssss", $name, $email, $hashed, $role, $status);
+
+        if ($stmt->execute()) {
+            $response['success'] = true;
+            $response['message'] = 'Registration successful';
+            $_SESSION['user_id'] = $stmt->insert_id;
+            $_SESSION['user_name'] = $name;
+            $_SESSION['user_email'] = $email;
+            $_SESSION['user_role'] = $role;
+        } else {
+            $response['message'] = 'Registration failed';
+        }
+        $stmt->close();
+        $conn->close();
+        echo json_encode($response);
+        exit;
+    }
+
     $email = isset($_POST['email']) ? trim($_POST['email']) : '';
     $password = isset($_POST['password']) ? $_POST['password'] : '';
     $remember = isset($_POST['remember']) ? true : false;
@@ -91,92 +167,6 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
     $conn->close();
     
     echo json_encode($response);
-    exit;
-    } elseif ($action === 'register') {
-        // Registration Logic
-        $name = isset($_POST['name']) ? trim($_POST['name']) : '';
-        $email = isset($_POST['email']) ? trim($_POST['email']) : '';
-        $password = isset($_POST['password']) ? $_POST['password'] : '';
-        $confirm_password = isset($_POST['confirm_password']) ? $_POST['confirm_password'] : '';
-
-        $hasError = false;
-
-        if (empty($name)) {
-            $response['nameError'] = 'Name is required';
-            $hasError = true;
-        } elseif (strlen($name) < 2) {
-            $response['nameError'] = 'Name must be at least 2 characters';
-            $hasError = true;
-        } elseif (!preg_match("/^[a-zA-Z\s]+$/", $name)) {
-            $response['nameError'] = 'Name can only contain letters and spaces';
-            $hasError = true;
-        }
-
-        if (empty($email)) {
-            $response['emailError'] = 'Email is required';
-            $hasError = true;
-        } elseif (!filter_var($email, FILTER_VALIDATE_EMAIL)) {
-            $response['emailError'] = 'Invalid email format';
-            $hasError = true;
-        }
-
-        if (empty($password)) {
-            $response['passwordError'] = 'Password is required';
-            $hasError = true;
-        } elseif (strlen($password) < 6) {
-            $response['passwordError'] = 'Password must be at least 6 characters';
-            $hasError = true;
-        }
-
-        if (empty($confirm_password)) {
-            $response['confirmError'] = 'Please confirm your password';
-            $hasError = true;
-        } elseif ($password !== $confirm_password) {
-            $response['confirmError'] = 'Passwords do not match';
-            $hasError = true;
-        }
-
-        if ($hasError) {
-            echo json_encode($response);
-            exit;
-        }
-
-        // Check if email exists
-        $stmt = $conn->prepare('SELECT user_id FROM users WHERE email = ? LIMIT 1');
-        $stmt->bind_param('s', $email);
-        $stmt->execute();
-        $result = $stmt->get_result();
-
-        if ($result->num_rows > 0) {
-            $response['emailError'] = 'An account with this email already exists';
-            echo json_encode($response);
-            exit;
-        }
-        $stmt->close();
-
-        // Create User
-        $hashedPassword = password_hash($password, PASSWORD_DEFAULT);
-        $role = 'client';
-        $status = 'active';
-
-        $stmt = $conn->prepare('INSERT INTO users (full_name, email, password_hash, role, status) VALUES (?, ?, ?, ?, ?)');
-        $stmt->bind_param('sssss', $name, $email, $hashedPassword, $role, $status);
-
-        if ($stmt->execute()) {
-            $response['success'] = true;
-            $response['message'] = 'Account created successfully';
-            $_SESSION['user_id'] = $conn->insert_id;
-            $_SESSION['user_email'] = $email;
-            $_SESSION['user_name'] = $name;
-            $_SESSION['user_role'] = $role;
-        } else {
-            $response['message'] = 'Failed to create account. Please try again.';
-        }
-        $stmt->close();
-        $conn->close();
-        echo json_encode($response);
-        exit;
-    }
     exit;
 }
 ?>
@@ -364,7 +354,7 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
                         </button>
 
                         <div class="form-footer">
-                            <p class="footer-text">Already have an account? <a href="?tab=login" class="switch-form"
+                            <p class="footer-text">Already have an account? <a href="#" class="switch-form"
                                     data-target="login">Back to Login</a></p>
                         </div>
                     </form>
@@ -378,6 +368,7 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
         <p class="copyright">&copy; 2025 Pet Adoption Center. All rights reserved.</p>
     </footer>
 
-    <script src="script.js?v=1.1"></script>
+    <script src="script.js"></script>
 </body>
 
+</html>

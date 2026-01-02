@@ -1,12 +1,12 @@
 <?php
 $host = "localhost";
-$user = "root";        // change if needed
-$pass = "";            // change if needed
-$db   = "pet_adoption"; // your database name
+$user = "root";
+$pass = "";
+$dbname = "pet-adoption-center";
 
-$conn = new mysqli($host, $user, $pass, $db);
+$conn = new mysqli($host, $user, $pass, $dbname);
 
 if ($conn->connect_error) {
-    die("Database Connection Failed: " . $conn->connect_error);
+    die("Connect Error: " . $conn->connect_error);
 }
 ?>
