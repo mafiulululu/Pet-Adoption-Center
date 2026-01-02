@@ -364,7 +364,7 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
                         </button>
 
                         <div class="form-footer">
-                            <p class="footer-text">Already have an account? <a href="#" class="switch-form"
+                            <p class="footer-text">Already have an account? <a href="?tab=login" class="switch-form"
                                     data-target="login">Back to Login</a></p>
                         </div>
                     </form>
@@ -378,7 +378,7 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
         <p class="copyright">&copy; 2025 Pet Adoption Center. All rights reserved.</p>
     </footer>
 
-    <script src="script.js"></script>
+    <script src="script.js?v=1.1"></script>
 </body>
 
 </html>

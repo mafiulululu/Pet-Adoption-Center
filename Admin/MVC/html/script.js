@@ -23,6 +23,11 @@ document.addEventListener('DOMContentLoaded', () => {
                 form.classList.remove('active');
             }
         });
+
+        // Update URL to reflect current tab
+        const url = new URL(window.location);
+        url.searchParams.set('tab', tabId);
+        window.history.pushState({}, '', url);
     }
 
     // Click event for tabs
