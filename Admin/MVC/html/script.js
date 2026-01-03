@@ -132,11 +132,13 @@ document.addEventListener('DOMContentLoaded', function () {
                     method: 'POST',
                     body: formData
                 })
-                .then(response => {
-                    if (!response.ok) {
-                        throw new Error('Network error');
+                .then(response => response.text())
+                .then(text => {
+                    try {
+                        return JSON.parse(text);
+                    } catch (e) {
+                        throw new Error('Server Error: ' + text);
                     }
-                    return response.json();
                 })
                 .then(data => {
 
@@ -162,8 +164,8 @@ document.addEventListener('DOMContentLoaded', function () {
                     }
                 })
                 .catch(error => {
-                    console.error(error);
-                    alert('An error occurred. Please try again.');
+                    console.error('Signup Error:', error);
+                    alert(error.message || 'An error occurred. Please try again.');
                 })
                 .finally(() => {
                     btn.disabled = false;

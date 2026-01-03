@@ -5,8 +5,8 @@ session_start();
 if ($_SERVER['REQUEST_METHOD'] === 'POST') {
     header('Content-Type: application/json');
     
-    // Database connection
-    require_once '../db/db_conn.php'; 
+    // Database connection  
+include '../db/db_conn.php'; 
 
     $response = [
         'success' => false,
@@ -90,6 +90,7 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
         $stmt->bind_param("sssss", $name, $email, $hashed, $role, $status);
 
         if ($stmt->execute()) {
+            
             $response['success'] = true;
             $response['message'] = 'Registration successful';
             $_SESSION['user_id'] = $stmt->insert_id;

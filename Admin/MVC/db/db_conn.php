@@ -3,7 +3,7 @@
 $host= "localhost";
 $user = "root";
 $pass = "";
-$db = "pet_adoption_center";
+$db = "pet-adoption-center";
 
 $conn = mysqli_connect($host, $user, $pass, $db);
 if (!$conn) {
