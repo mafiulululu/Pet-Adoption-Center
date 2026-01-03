@@ -55,7 +55,7 @@ $result = $conn->query($sql);
     <div class="container">
         <div class="page-header">
             <h1 class="page-title">Adopt a Cat 🐱</h1>
-            <a href="home.php" class="btn-adopt" style="width: auto; margin: 0; padding: 0.6rem 1.2rem;">Back to Dashboard</a>
+            <a href="home.php" class="btn-adopt" style="width: auto; margin: 0; padding: 0.6rem 1.2rem;">Back to Home-Page</a>
         </div>
 
         <div class="cat-grid">
