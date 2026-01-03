@@ -54,7 +54,7 @@
                     <span class="theme-icon">🌙</span>
                 </button>
                 <button class="btn-secondary">My Profile</button>
-                <button class="btn-logout">Logout</button>
+                <button onclick="handleLogout()" class="btn-logout">Logout</button>
             </div>
 
             <!-- Mobile Menu Toggle -->
@@ -64,7 +64,16 @@
                 <span></span>
             </button>
         </div>
+
     </nav>
+
+    <script>
+        function handleLogout() {
+            // Clear any session data if needed (this is just a placeholder)
+            // Redirect to login page
+            window.location.href = 'login.php';
+        }
+    </script>
 
     <!-- Hero Section -->
     <section class="hero">

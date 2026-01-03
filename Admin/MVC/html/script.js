@@ -99,7 +99,7 @@ document.addEventListener('DOMContentLoaded', function () {
 
                 if (data.success) {
                     // ✅ SUCCESS → REDIRECT TO DASHBOARD
-                    window.location.href = 'dashboard.php';
+                    window.location.href = 'home.php';
                 } else {
                     document.getElementById('loginEmailError').innerText = data.emailError || '';
                     document.getElementById('loginPasswordError').innerText = data.passwordError || '';
@@ -150,7 +150,7 @@ document.addEventListener('DOMContentLoaded', function () {
 
                     if (data.success) {
                         alert(data.message);
-                        window.location.href = 'dashboard.php';
+                        window.location.href = 'home.php';
                     } else {
                         document.getElementById('signupNameError').innerText = data.nameError;
                         document.getElementById('signupEmailError').innerText = data.emailError;
