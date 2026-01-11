@@ -100,7 +100,7 @@
                     <h3 class="category-name">Cats</h3>
                     <p class="category-description">Find your perfect feline friend</p>
                     <div class="category-count">230+ available</div>
-                    <button class="category-btn">Browse Cats</button>
+                    <button class="category-btn" onclick="window.location.href='cats.php'">Browse Cats</button>
                 </div>
 
                 <!-- Dogs -->

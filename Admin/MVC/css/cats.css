@@ -1,0 +1,115 @@
+/* Page Layout matching Dashboard theme */
+body {
+    font-family: 'Inter', sans-serif;
+    background-color: #f8f9fa;
+    margin: 0;
+    padding: 0;
+}
+
+.container {
+    max-width: 1200px;
+    margin: 0 auto;
+    padding: 2rem;
+}
+
+.page-header {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    margin-bottom: 2rem;
+}
+
+.page-title {
+    font-size: 2rem;
+    font-weight: 700;
+    color: #333;
+}
+
+/* Grid Layout for Cats */
+.cat-grid {
+    display: grid;
+    grid-template-columns: repeat(auto-fill, minmax(280px, 1fr));
+    gap: 2rem;
+}
+
+.cat-card {
+    background: white;
+    border-radius: 16px;
+    overflow: hidden;
+    box-shadow: 0 4px 20px rgba(0, 0, 0, 0.05);
+    transition: transform 0.3s ease, box-shadow 0.3s ease;
+}
+
+.cat-card:hover {
+    transform: translateY(-5px);
+    box-shadow: 0 8px 25px rgba(0, 0, 0, 0.1);
+}
+
+.cat-image {
+    width: 100%;
+    height: 220px;
+    object-fit: cover;
+    background-color: #eee;
+}
+
+.cat-details {
+    padding: 1.5rem;
+}
+
+.cat-name {
+    font-size: 1.25rem;
+    font-weight: 700;
+    margin: 0 0 0.5rem 0;
+    color: #1a1a1a;
+}
+
+.cat-meta {
+    color: #666;
+    font-size: 0.95rem;
+    margin-bottom: 0.5rem;
+    display: flex;
+    justify-content: space-between;
+}
+
+.status-badge {
+    display: inline-block;
+    padding: 0.25rem 0.75rem;
+    border-radius: 50px;
+    font-size: 0.85rem;
+    font-weight: 600;
+    margin-top: 0.5rem;
+}
+
+.status-available { background-color: #e0f7fa; color: #006064; }
+.status-adopted { background-color: #ffebee; color: #c62828; }
+.status-pending { background-color: #fff3e0; color: #e65100; }
+
+.btn-adopt {
+    display: block;
+    width: 100%;
+    padding: 0.8rem;
+    margin-top: 1.5rem;
+    border: none;
+    border-radius: 8px;
+    background: linear-gradient(135deg, #FF1B6B, #45CAFF);
+    color: white;
+    font-weight: 600;
+    text-align: center;
+    text-decoration: none;
+    cursor: pointer;
+    transition: opacity 0.2s;
+}
+
+.btn-adopt:hover { opacity: 0.9; }
+.btn-adopt.disabled { background: #e0e0e0; color: #999; cursor: not-allowed; pointer-events: none; }
+
+.no-cats-message {
+    grid-column: 1/-1;
+    text-align: center;
+    padding: 3rem;
+}
+
+.no-cats-message h3 {
+    color: #8e44ad; /* Unique Purple Color */
+    margin-bottom: 0.5rem;
+}
