@@ -59,13 +59,10 @@ document.addEventListener('DOMContentLoaded', () => {
             }
         });
     });
-});
 
-  // ===============================
-// LOGIN FORM SUBMIT (FINAL VERSION)
-// ===============================
-document.addEventListener('DOMContentLoaded', function () {
-
+    // ===============================
+    // LOGIN & REGISTER FORM SUBMIT
+    // ===============================
     const loginForm = document.getElementById('loginForm');
     const signupForm = document.getElementById('signupForm');
 
@@ -94,15 +91,17 @@ document.addEventListener('DOMContentLoaded', function () {
             .then(data => {
 
                 // Clear previous errors
-                document.getElementById('loginEmailError').innerText = '';
-                document.getElementById('loginPasswordError').innerText = '';
+                const emailError = document.getElementById('loginEmailError');
+                const passError = document.getElementById('loginPasswordError');
+                if (emailError) emailError.innerText = '';
+                if (passError) passError.innerText = '';
 
                 if (data.success) {
                     // ✅ SUCCESS → REDIRECT TO DASHBOARD
                     window.location.href = 'home.php';
                 } else {
-                    document.getElementById('loginEmailError').innerText = data.emailError || '';
-                    document.getElementById('loginPasswordError').innerText = data.passwordError || '';
+                    if (emailError) emailError.innerText = data.emailError || '';
+                    if (passError) passError.innerText = data.passwordError || '';
                 }
             })
             .catch(error => {
@@ -143,19 +142,24 @@ document.addEventListener('DOMContentLoaded', function () {
                 .then(data => {
 
                     // Clear previous errors
-                    document.getElementById('signupNameError').innerText = '';
-                    document.getElementById('signupEmailError').innerText = '';
-                    document.getElementById('signupPasswordError').innerText = '';
-                    document.getElementById('signupConfirmError').innerText = '';
+                    ['signupNameError', 'signupEmailError', 'signupPasswordError', 'signupConfirmError'].forEach(id => {
+                        const el = document.getElementById(id);
+                        if (el) el.innerText = '';
+                    });
 
                     if (data.success) {
                         alert(data.message);
                         window.location.href = 'home.php';
                     } else {
-                        document.getElementById('signupNameError').innerText = data.nameError;
-                        document.getElementById('signupEmailError').innerText = data.emailError;
-                        document.getElementById('signupPasswordError').innerText = data.passwordError;
-                        document.getElementById('signupConfirmError').innerText = data.confirmError;
+                        const nameErr = document.getElementById('signupNameError');
+                        const emailErr = document.getElementById('signupEmailError');
+                        const passErr = document.getElementById('signupPasswordError');
+                        const confErr = document.getElementById('signupConfirmError');
+
+                        if (nameErr) nameErr.innerText = data.nameError || '';
+                        if (emailErr) emailErr.innerText = data.emailError || '';
+                        if (passErr) passErr.innerText = data.passwordError || '';
+                        if (confErr) confErr.innerText = data.confirmError || '';
 
                         // If there is a general error message (like DB failure) and no specific field errors
                         if (data.message && !data.nameError && !data.emailError && !data.passwordError && !data.confirmError) {

@@ -254,6 +254,8 @@ body {
     cursor: pointer;
     transition: var(--transition);
     font-family: var(--font-family);
+    text-decoration: none;
+    display: inline-block;
 }
 
 .btn-logout:hover {

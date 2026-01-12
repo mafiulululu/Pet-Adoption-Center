@@ -21,6 +21,7 @@ CREATE TABLE pets (
     health_status VARCHAR(100),
     adoption_status ENUM('available', 'pending', 'adopted') DEFAULT 'available',
     description TEXT,
+    image VARCHAR(255),
     added_by INT,
     created_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP,
     updated_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP ON UPDATE CURRENT_TIMESTAMP,
@@ -59,17 +60,12 @@ CREATE TABLE pet_care_status (
     FOREIGN KEY (worker_id) REFERENCES users(user_id) ON DELETE CASCADE
 );
 
-CREATE TABLE pet_care_status (
-    care_id INT AUTO_INCREMENT PRIMARY KEY,
+CREATE TABLE adoption_requests (
+    request_id INT AUTO_INCREMENT PRIMARY KEY,
     pet_id INT NOT NULL,
-    worker_id INT NOT NULL,
-    feeding_status VARCHAR(100),
-    health_notes TEXT,
-    last_checkup_date DATE,
-    updated_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP ON UPDATE CURRENT_TIMESTAMP,
+    client_id INT NOT NULL,
+    request_date TIMESTAMP DEFAULT CURRENT_TIMESTAMP,
+    status ENUM('pending', 'approved', 'rejected') DEFAULT 'pending',
     FOREIGN KEY (pet_id) REFERENCES pets(pet_id) ON DELETE CASCADE,
-    FOREIGN KEY (worker_id) REFERENCES users(user_id) ON DELETE CASCADE
+    FOREIGN KEY (client_id) REFERENCES users(user_id) ON DELETE CASCADE
 );
-
-
-

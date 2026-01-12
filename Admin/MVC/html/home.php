@@ -1,3 +1,6 @@
+<?php
+session_start();
+?>
 <!DOCTYPE html>
 <html lang="en" data-theme="light">
 
@@ -47,14 +50,22 @@
                     </ul>
                 </li>
                 <li class="nav-item"><a href="#shop" class="nav-link">Shop</a></li>
+                
+                <!-- Admin Only Link -->
+                <?php if (isset($_SESSION['user_role']) && $_SESSION['user_role'] === 'admin'): ?>
+                    <li class="nav-item"><a href="add_pet.php" class="nav-link" style="color: #FF1B6B; font-weight: bold;">+ Add Pet</a></li>
+                <?php endif; ?>
+                
             </ul>
 
             <div class="nav-actions">
                 <button class="theme-toggle" id="themeToggle" aria-label="Toggle theme">
                     <span class="theme-icon">🌙</span>
                 </button>
-                <button class="btn-secondary">My Profile</button>
-                <button onclick="handleLogout()" class="btn-logout">Logout</button>
+                <?php if (isset($_SESSION['user_name'])): ?>
+                    <button class="btn-secondary" onclick="showProfile()">My Profile</button>
+                <?php endif; ?>
+                <a href="logout.php" class="btn-logout">Logout</a>
             </div>
 
             <!-- Mobile Menu Toggle -->
@@ -67,19 +78,16 @@
 
     </nav>
 
-    <script>
-        function handleLogout() {
-            // Clear any session data if needed (this is just a placeholder)
-            // Redirect to login page
-            window.location.href = 'login.php';
-        }
-    </script>
-
     <!-- Hero Section -->
     <section class="hero">
         <div class="hero-content">
+            <?php if (isset($_SESSION['user_name'])): ?>
+                <h1 class="hero-title">Welcome back, <?php echo htmlspecialchars($_SESSION['user_name']); ?>!</h1>
+                <p class="hero-subtitle">Ready to find your new best friend?</p>
+            <?php else: ?>
             <h1 class="hero-title">Find Your Perfect Companion</h1>
             <p class="hero-subtitle">Thousands of loving pets are waiting for their forever home</p>
+            <?php endif; ?>
             <div class="hero-search">
                 <input type="text" class="search-input" placeholder="Search for pets by name, breed, or type...">
                 <button class="search-btn">Search</button>
@@ -109,7 +117,8 @@
                     <h3 class="category-name">Dogs</h3>
                     <p class="category-description">Loyal companions waiting for you</p>
                     <div class="category-count">340+ available</div>
-                    <button class="category-btn">Browse Dogs</button>
+                    
+                    <button class="category-btn" onclick="window.location.href='dogs.php'">Browse Dogs</button>
                 </div>
 
                 <!-- Rabbits -->
@@ -118,7 +127,8 @@
                     <h3 class="category-name">Rabbits</h3>
                     <p class="category-description">Adorable bunnies ready to hop home</p>
                     <div class="category-count">85+ available</div>
-                    <button class="category-btn">Browse Rabbits</button>
+                    
+                    <button class="category-btn" onclick="window.location.href='rabbits.php'">Browse Rabbits</button>
                 </div>
 
                 <!-- Tortoises -->
@@ -127,7 +137,8 @@
                     <h3 class="category-name">Tortoises</h3>
                     <p class="category-description">Slow and steady companions</p>
                     <div class="category-count">45+ available</div>
-                    <button class="category-btn">Browse Tortoises</button>
+                    
+                    <button class="category-btn" onclick="window.location.href='tortoises.php'">Browse Tortoises</button>
                 </div>
             </div>
         </div>
@@ -234,6 +245,15 @@
         </div>
     </footer>
 
+    <script>
+        function showProfile() {
+            const userName = "<?php echo isset($_SESSION['user_name']) ? htmlspecialchars($_SESSION['user_name'], ENT_QUOTES, 'UTF-8') : 'N/A'; ?>";
+            const userEmail = "<?php echo isset($_SESSION['user_email']) ? htmlspecialchars($_SESSION['user_email'], ENT_QUOTES, 'UTF-8') : 'N/A'; ?>";
+            alert(`--- Your Profile ---\n\n👤 Name: ${userName}\n📧 Email: ${userEmail}`);
+        }
+
+        // The dashboard.js script might contain other logic, so we keep it.
+    </script>
     <script src="dashboard.js"></script>
 </body>
 

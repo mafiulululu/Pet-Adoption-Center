@@ -40,7 +40,7 @@ $result = $conn->query($sql);
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Available Dogs - Pet Adoption Center</title>
     <link rel="stylesheet" href="../css/style.css">
-    <link rel="stylesheet" href="../css/dogs.css">
+    <link rel="stylesheet" href="../css/cats.css">
     <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700&display=swap" rel="stylesheet">
 </head>
 <body>
@@ -70,20 +70,31 @@ $result = $conn->query($sql);
  
                             <div class="dog-meta">
                                 <span>Age:</span>
-                                <strong><?php echo htmlspecialchars($row['age']); ?></strong>
+                                <strong><?php echo htmlspecialchars($row['age']); ?> years</strong>
                             </div>
  
                             <?php
                                 $statusClass = 'status-available';
-                                if(strtolower($row['status']) == 'adopted') $statusClass = 'status-adopted';
-                                if(strtolower($row['status']) == 'pending') $statusClass = 'status-pending';
+                                $status = strtolower($row['adoption_status']);
+                                if($status == 'adopted') $statusClass = 'status-adopted';
+                                if($status == 'pending') $statusClass = 'status-pending';
                             ?>
                             <span class="status-badge <?php echo $statusClass; ?>">
-                                <?php echo ucfirst(htmlspecialchars($row['status'])); ?>
+                                <?php echo ucfirst(htmlspecialchars($row['adoption_status'])); ?>
                             </span>
  
-                            <?php if(strtolower($row['status']) === 'available'): ?>
-                                <a href="adopt_process.php?id=<?php echo $row['id']; ?>" class="btn-adopt">Adopt Me</a>
+                            <!-- Role Based Actions -->
+                            <?php if ($user_role === 'admin'): ?>
+                                <div class="admin-actions" style="margin-top: 10px;">
+                                    <a href="edit_pet.php?id=<?php echo $row['pet_id']; ?>" class="btn-adopt" style="background-color: #f39c12;">Edit</a>
+                                    <a href="delete_pet.php?id=<?php echo $row['pet_id']; ?>" class="btn-adopt" style="background-color: #e74c3c;" onclick="return confirm('Delete this pet?')">Delete</a>
+                                </div>
+                            <?php elseif ($user_role === 'worker'): ?>
+                                <div class="worker-actions" style="margin-top: 10px;">
+                                    <a href="care_status.php?id=<?php echo $row['pet_id']; ?>" class="btn-adopt" style="background-color: #3498db;">Update Care</a>
+                                </div>
+                            <?php elseif($status === 'available'): ?>
+                                <a href="adopt_process.php?id=<?php echo $row['pet_id']; ?>" class="btn-adopt">Adopt Me</a>
                             <?php else: ?>
                                 <button class="btn-adopt disabled">Not Available</button>
                             <?php endif; ?>
