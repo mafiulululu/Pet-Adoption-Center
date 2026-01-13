@@ -48,6 +48,8 @@ session_start();
                         <li><a href="#rabbits">🐇 Rabbits</a></li>
                         <li><a href="#tortoise">🐢 Tortoises</a></li>
                         <li><a href="pet_food.php" class="nav-link">Pet Food</a></li>
+                        <li><a href="pet_toys.php" class="nav-link">Pet Toys</a></li>
+
 
                     </ul>
                 </li>
