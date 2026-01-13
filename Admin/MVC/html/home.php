@@ -50,6 +50,14 @@ session_start();
                         <li><a href="pet_food.php" class="nav-link">Pet Food</a></li>
                         <li><a href="pet_toys.php" class="nav-link">Pet Toys</a></li>
                         <li><a href="pet_homes.php" class="nav-link">Pet Homes</a></li>
+                        <li><a href="pet_healthcare.php" class="nav-link">Pet Healthcare</a></li>
+                        
+    <div class="category-icon">💊</div>
+    <h3 class="category-name">Pet Healthcare</h3>
+    <p class="category-description">Vitamins, supplements, and first aid for your pets.</p>
+    <button class="category-btn" onclick="window.location.href='pet_healthcare.php'">Visit Shop</button>
+</div>
+
 
 
 
