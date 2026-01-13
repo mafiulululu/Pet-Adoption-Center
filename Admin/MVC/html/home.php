@@ -51,43 +51,34 @@ session_start();
                         <li><a href="pet_toys.php" class="nav-link">Pet Toys</a></li>
                         <li><a href="pet_homes.php" class="nav-link">Pet Homes</a></li>
                         <li><a href="pet_healthcare.php" class="nav-link">Pet Healthcare</a></li>
-                        
-    <div class="category-icon">💊</div>
-    <h3 class="category-name">Pet Healthcare</h3>
-    <p class="category-description">Vitamins, supplements, and first aid for your pets.</p>
-    <button class="category-btn" onclick="window.location.href='pet_healthcare.php'">Visit Shop</button>
-</div>
-
-
-
-
                     </ul>
-                </li>
-                <li class="nav-item"><a href="#shop" class="nav-link">Shop</a></li>
-                
-                <!-- Admin Only Link -->
-                <?php if (isset($_SESSION['user_role']) && $_SESSION['user_role'] === 'admin'): ?>
-                    <li class="nav-item"><a href="add_pet.php" class="nav-link" style="color: #FF1B6B; font-weight: bold;">+ Add Pet</a></li>
-                <?php endif; ?>
-                
-            </ul>
+        </li>
+        <li class="nav-item"><a href="#shop" class="nav-link">Shop</a></li>
 
-            <div class="nav-actions">
-                <button class="theme-toggle" id="themeToggle" aria-label="Toggle theme">
-                    <span class="theme-icon">🌙</span>
-                </button>
-                <?php if (isset($_SESSION['user_name'])): ?>
-                    <button class="btn-secondary" onclick="showProfile()">My Profile</button>
-                <?php endif; ?>
-                <a href="logout.php" class="btn-logout">Logout</a>
-            </div>
+        <!-- Admin Only Link -->
+        <?php if (isset($_SESSION['user_role']) && $_SESSION['user_role'] === 'admin'): ?>
+            <li class="nav-item"><a href="add_pet.php" class="nav-link" style="color: #FF1B6B; font-weight: bold;">+ Add
+                    Pet</a></li>
+        <?php endif; ?>
 
-            <!-- Mobile Menu Toggle -->
-            <button class="mobile-menu-toggle" id="mobileMenuToggle">
-                <span></span>
-                <span></span>
-                <span></span>
+        </ul>
+
+        <div class="nav-actions">
+            <button class="theme-toggle" id="themeToggle" aria-label="Toggle theme">
+                <span class="theme-icon">🌙</span>
             </button>
+            <?php if (isset($_SESSION['user_name'])): ?>
+                <button class="btn-secondary" onclick="showProfile()">My Profile</button>
+            <?php endif; ?>
+            <a href="logout.php" class="btn-logout">Logout</a>
+        </div>
+
+        <!-- Mobile Menu Toggle -->
+        <button class="mobile-menu-toggle" id="mobileMenuToggle">
+            <span></span>
+            <span></span>
+            <span></span>
+        </button>
         </div>
 
     </nav>
@@ -99,8 +90,8 @@ session_start();
                 <h1 class="hero-title">Welcome back, <?php echo htmlspecialchars($_SESSION['user_name']); ?>!</h1>
                 <p class="hero-subtitle">Ready to find your new best friend?</p>
             <?php else: ?>
-            <h1 class="hero-title">Find Your Perfect Companion</h1>
-            <p class="hero-subtitle">Thousands of loving pets are waiting for their forever home</p>
+                <h1 class="hero-title">Find Your Perfect Companion</h1>
+                <p class="hero-subtitle">Thousands of loving pets are waiting for their forever home</p>
             <?php endif; ?>
             <div class="hero-search">
                 <input type="text" class="search-input" placeholder="Search for pets by name, breed, or type...">
@@ -131,7 +122,7 @@ session_start();
                     <h3 class="category-name">Dogs</h3>
                     <p class="category-description">Loyal companions waiting for you</p>
                     <div class="category-count">340+ available</div>
-                    
+
                     <button class="category-btn" onclick="window.location.href='dogs.php'">Browse Dogs</button>
                 </div>
 
@@ -141,7 +132,7 @@ session_start();
                     <h3 class="category-name">Rabbits</h3>
                     <p class="category-description">Adorable bunnies ready to hop home</p>
                     <div class="category-count">85+ available</div>
-                    
+
                     <button class="category-btn" onclick="window.location.href='rabbits.php'">Browse Rabbits</button>
                 </div>
 
@@ -151,8 +142,9 @@ session_start();
                     <h3 class="category-name">Tortoises</h3>
                     <p class="category-description">Slow and steady companions</p>
                     <div class="category-count">45+ available</div>
-                    
-                    <button class="category-btn" onclick="window.location.href='tortoises.php'">Browse Tortoises</button>
+
+                    <button class="category-btn" onclick="window.location.href='tortoises.php'">Browse
+                        Tortoises</button>
                 </div>
             </div>
         </div>
