@@ -13,6 +13,7 @@ include '../db/db_conn.php';
         'emailError' => '',
         'passwordError' => '',
         'nameError' => '',
+        'phoneError' => '',
         'confirmError' => '',
         'message' => ''
     ];
@@ -22,6 +23,7 @@ include '../db/db_conn.php';
     if ($action === 'register') {
         $name = isset($_POST['name']) ? trim($_POST['name']) : '';
         $email = isset($_POST['email']) ? trim($_POST['email']) : '';
+        $phone = isset($_POST['phone']) ? trim($_POST['phone']) : '';
         $password = isset($_POST['password']) ? $_POST['password'] : '';
         $confirm_password = isset($_POST['confirm_password']) ? $_POST['confirm_password'] : '';
         $role = isset($_POST['role']) ? trim($_POST['role']) : 'client';
@@ -43,6 +45,11 @@ include '../db/db_conn.php';
             $hasError = true;
         } elseif (!filter_var($email, FILTER_VALIDATE_EMAIL)) {
             $response['emailError'] = 'Invalid email format';
+            $hasError = true;
+        }
+
+        if (empty($phone)) {
+            $response['phoneError'] = 'Phone number is required';
             $hasError = true;
         }
 
@@ -84,7 +91,7 @@ include '../db/db_conn.php';
         if (!in_array($role, $allowed_roles)) $role = 'client';
         
         $status = 'active';
-        $stmt = $conn->prepare("INSERT INTO users (full_name, email, password_hash, role, status) VALUES (?, ?, ?, ?, ?)");
+        $stmt = $conn->prepare("INSERT INTO users (full_name, email, phone_number, password_hash, role, status) VALUES (?, ?, ?, ?, ?, ?)");
         
         if (!$stmt) {
             $response['message'] = 'Database prepare error: ' . $conn->error;
@@ -92,7 +99,7 @@ include '../db/db_conn.php';
             exit;
         }
 
-        $stmt->bind_param("sssss", $name, $email, $hashed, $role, $status);
+        $stmt->bind_param("ssssss", $name, $email, $phone, $hashed, $role, $status);
 
         if ($stmt->execute()) {
             
@@ -334,6 +341,15 @@ include '../db/db_conn.php';
                                     placeholder="you@example.com" required>
                             </div>
                             <span class="error-msg" id="signupEmailError"></span>
+                        </div>
+
+                        <div class="input-group">
+                            <label for="signup-phone" class="input-label">Phone Number</label>
+                            <div class="input-wrapper">
+                                <input type="tel" id="signup-phone" name="phone" class="input-field"
+                                    placeholder="123-456-7890" required>
+                            </div>
+                            <span class="error-msg" id="signupPhoneError"></span>
                         </div>
 
                         <div class="input-group">
