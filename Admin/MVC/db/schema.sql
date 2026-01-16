@@ -69,3 +69,22 @@ CREATE TABLE adoption_requests (
     FOREIGN KEY (pet_id) REFERENCES pets(pet_id) ON DELETE CASCADE,
     FOREIGN KEY (client_id) REFERENCES users(user_id) ON DELETE CASCADE
 );
+CREATE TABLE adoption_requests (
+    adoption_id INT AUTO_INCREMENT PRIMARY KEY,
+
+    user_id INT NOT NULL,
+
+    full_name VARCHAR(100) NOT NULL,
+    phone VARCHAR(20) NOT NULL,
+    email VARCHAR(100) NOT NULL,
+    address TEXT NOT NULL,
+
+    status ENUM('pending', 'approved', 'rejected') DEFAULT 'pending',
+
+    request_date TIMESTAMP DEFAULT CURRENT_TIMESTAMP,
+
+    CONSTRAINT fk_adoption_user
+        FOREIGN KEY (user_id)
+        REFERENCES users(user_id)
+        ON DELETE CASCADE
+);
