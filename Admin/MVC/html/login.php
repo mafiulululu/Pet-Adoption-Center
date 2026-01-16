@@ -347,7 +347,7 @@ include '../db/db_conn.php';
                             <label for="signup-phone" class="input-label">Phone Number</label>
                             <div class="input-wrapper">
                                 <input type="tel" id="signup-phone" name="phone" class="input-field"
-                                    placeholder="123-456-7890" required>
+                                    placeholder="+880-" required>
                             </div>
                             <span class="error-msg" id="signupPhoneError"></span>
                         </div>
