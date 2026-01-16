@@ -13,6 +13,27 @@ $user_id = $_SESSION['user_id'];
 $message = '';
 $messageType = '';
 
+// Fetch Pet Details
+$sql_pet = "SELECT * FROM pets WHERE pet_id = $pet_id";
+$result_pet = $conn->query($sql_pet);
+
+if ($result_pet->num_rows == 0) {
+    echo "Pet not found.";
+    exit();
+}
+$pet = $result_pet->fetch_assoc();
+
+// Determine back link based on pet type/species
+$back_link = 'cats.php'; // Default
+if (isset($pet['type'])) {
+    $t = strtolower($pet['type']);
+    if ($t === 'dog') $back_link = 'dogs.php';
+    if ($t === 'rabbit') $back_link = 'rabbits.php';
+    if ($t === 'tortoise') $back_link = 'tortoises.php';
+} elseif (isset($pet['species']) && strtolower($pet['species']) === 'cat') {
+    $back_link = 'cats.php';
+}
+
 // Handle Form Submission
 if ($_SERVER['REQUEST_METHOD'] === 'POST') {
     $phone = $conn->real_escape_string($_POST['phone']);
@@ -44,7 +65,7 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
         $messageType = "success";
         
         // Redirect to cats page after 3 seconds
-        header("refresh:3;url=cats.php");
+        header("refresh:3;url=$back_link");
 
     } catch (Exception $e) {
         $conn->rollback();
@@ -52,16 +73,6 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
         $messageType = "error";
     }
 }
-
-// Fetch Pet Details
-$sql_pet = "SELECT * FROM pets WHERE pet_id = $pet_id";
-$result_pet = $conn->query($sql_pet);
-
-if ($result_pet->num_rows == 0) {
-    echo "Pet not found.";
-    exit();
-}
-$pet = $result_pet->fetch_assoc();
 
 // Fetch User Details for Pre-filling
 $sql_user = "SELECT u.full_name, u.email, u.phone_number, p.address 
@@ -168,13 +179,13 @@ $user = $result_user->fetch_assoc();
                     <textarea name="address" class="form-input" rows="3" required placeholder="Enter your full address"><?php echo htmlspecialchars($user['address'] ?? ''); ?></textarea>
                 </div>
                 <button type="submit" class="btn-submit">Submit Application</button>
-                <a href="cats.php" style="display: block; text-align: center; margin-top: 1rem; color: #666; text-decoration: none;">Cancel</a>
+                <a href="<?php echo $back_link; ?>" style="display: block; text-align: center; margin-top: 1rem; color: #666; text-decoration: none;">Cancel</a>
             </form>
             <?php elseif ($pet['adoption_status'] !== 'available' && empty($message)): ?>
                 <div class="alert error">
                     This pet is currently <strong><?php echo ucfirst($pet['adoption_status']); ?></strong> and cannot be adopted.
                 </div>
-                <a href="cats.php" class="btn-submit" style="text-align: center; display: block; text-decoration: none;">Back to Cats</a>
+                <a href="<?php echo $back_link; ?>" class="btn-submit" style="text-align: center; display: block; text-decoration: none;">Back to List</a>
             <?php endif; ?>
         </div>
     </div>
