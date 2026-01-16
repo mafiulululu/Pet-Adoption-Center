@@ -318,7 +318,7 @@ include '../db/db_conn.php';
                             <label for="signup-name" class="input-label">Full Name</label>
                             <div class="input-wrapper">
                                 <input type="text" id="signup-name" name="name" class="input-field"
-                                    placeholder="John Doe" required>
+                                    placeholder=" " required>
                             </div>
                             <span class="error-msg" id="signupNameError"></span>
                         </div>
