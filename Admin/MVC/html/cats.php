@@ -9,32 +9,22 @@ $user_role = $_SESSION['user_role'] ?? 'client';
 
 // AUTOMATIC SETUP: Create table and insert sample data if needed
 // Note: Table structure is defined in schema.sql
-$conn->query("CREATE TABLE IF NOT EXISTS pets (
-    id INT AUTO_INCREMENT PRIMARY KEY,
-    name VARCHAR(100) NOT NULL,
-    breed VARCHAR(100) NOT NULL,
-    age VARCHAR(50),
-    status VARCHAR(20) DEFAULT 'available',
-    type VARCHAR(20) NOT NULL,
-    image VARCHAR(255)
-)");
-
-$check = $conn->query("SELECT count(*) as count FROM pets WHERE type = 'cat'");
+$check = $conn->query("SELECT count(*) as count FROM pets WHERE species = 'cat'");
 if ($check && $check->fetch_assoc()['count'] == 0) {
     // Insert sample data matching the new schema (age is INT, species instead of type)
-    $insertSql = "INSERT INTO pets (name, breed, age, status, type, image) VALUES 
-        ('Luna', 'Siamese', '2 years', 'available', 'cat', 'https://images.unsplash.com/photo-1513245543132-31f507417b26?auto=format&fit=crop&w=400&q=80'),
-        ('Oliver', 'Maine Coon', '3 years', 'available', 'cat', 'https://images.unsplash.com/photo-1533738363-b7f9aef128ce?auto=format&fit=crop&w=400&q=80'),
-        ('Bella', 'Persian', '4 years', 'adopted', 'cat', 'https://images.unsplash.com/photo-1573865526739-10659fec78a5?auto=format&fit=crop&w=400&q=80'),
-        ('Leo', 'Bengal', '1 year', 'available', 'cat', 'https://images.unsplash.com/photo-1519052537078-e6302a4968d4?auto=format&fit=crop&w=400&q=80'),
-        ('Milo', 'Scottish Fold', '2 years', 'pending', 'cat', 'https://images.unsplash.com/photo-1574158622682-e40e69881006?auto=format&fit=crop&w=400&q=80'),
-        ('Cleo', 'Sphynx', '3 years', 'available', 'cat', 'https://images.unsplash.com/photo-1518791841217-8f162f1e1131?auto=format&fit=crop&w=400&q=80')";
+    $insertSql = "INSERT INTO pets (name, breed, age, adoption_status, species, image, gender, color, health_status) VALUES 
+        ('Luna', 'Siamese', 2, 'available', 'cat', 'https://images.unsplash.com/photo-1513245543132-31f507417b26?auto=format&fit=crop&w=400&q=80', 'female', 'Cream', 'Healthy'),
+        ('Oliver', 'Maine Coon', 3, 'available', 'cat', 'https://images.unsplash.com/photo-1533738363-b7f9aef128ce?auto=format&fit=crop&w=400&q=80', 'male', 'Tabby', 'Healthy'),
+        ('Bella', 'Persian', 4, 'adopted', 'cat', 'https://images.unsplash.com/photo-1573865526739-10659fec78a5?auto=format&fit=crop&w=400&q=80', 'female', 'White', 'Healthy'),
+        ('Leo', 'Bengal', 1, 'available', 'cat', 'https://images.unsplash.com/photo-1519052537078-e6302a4968d4?auto=format&fit=crop&w=400&q=80', 'male', 'Spotted', 'Vaccinated'),
+        ('Milo', 'Scottish Fold', 2, 'pending', 'cat', 'https://images.unsplash.com/photo-1574158622682-e40e69881006?auto=format&fit=crop&w=400&q=80', 'male', 'Grey', 'Healthy'),
+        ('Cleo', 'Sphynx', 3, 'available', 'cat', 'https://images.unsplash.com/photo-1518791841217-8f162f1e1131?auto=format&fit=crop&w=400&q=80', 'female', 'Pink', 'Special Diet')";
     
     $conn->query($insertSql);
 }
 
 // Fetch cats from the database
-$sql = "SELECT * FROM pets WHERE type = 'cat' ORDER BY status ASC";
+$sql = "SELECT * FROM pets WHERE species = 'cat' ORDER BY adoption_status ASC";
 $result = $conn->query($sql);
 ?>
 
@@ -75,31 +65,31 @@ $result = $conn->query($sql);
                             
                             <div class="cat-meta">
                                 <span>Age:</span>
-                                <strong><?php echo htmlspecialchars($row['age']); ?></strong>
+                                <strong><?php echo htmlspecialchars($row['age']); ?> years</strong>
                             </div>
 
                             <?php 
                                 $statusClass = 'status-available';
-                                $status = strtolower($row['status']);
+                                $status = strtolower($row['adoption_status']);
                                 if($status == 'adopted') $statusClass = 'status-adopted';
                                 if($status == 'pending') $statusClass = 'status-pending';
                             ?>
                             <span class="status-badge <?php echo $statusClass; ?>">
-                                <?php echo ucfirst(htmlspecialchars($row['status'])); ?>
+                                <?php echo ucfirst(htmlspecialchars($row['adoption_status'])); ?>
                             </span>
 
                             <!-- Role Based Actions -->
                             <?php if ($user_role === 'admin'): ?>
                                 <div class="admin-actions" style="margin-top: 10px;">
-                                    <a href="edit_pet.php?id=<?php echo $row['id']; ?>" class="btn-adopt" style="background-color: #f39c12;">Edit</a>
-                                    <a href="delete_pet.php?id=<?php echo $row['id']; ?>" class="btn-adopt" style="background-color: #e74c3c;" onclick="return confirm('Delete this pet?')">Delete</a>
+                                    <a href="edit_pet.php?id=<?php echo $row['pet_id']; ?>" class="btn-adopt" style="background-color: #f39c12;">Edit</a>
+                                    <a href="delete_pet.php?id=<?php echo $row['pet_id']; ?>" class="btn-adopt" style="background-color: #e74c3c;" onclick="return confirm('Delete this pet?')">Delete</a>
                                 </div>
                             <?php elseif ($user_role === 'worker'): ?>
                                 <div class="worker-actions" style="margin-top: 10px;">
-                                    <a href="care_status.php?id=<?php echo $row['id']; ?>" class="btn-adopt" style="background-color: #3498db;">Update Care</a>
+                                    <a href="care_status.php?id=<?php echo $row['pet_id']; ?>" class="btn-adopt" style="background-color: #3498db;">Update Care</a>
                                 </div>
                             <?php elseif($status === 'available'): ?>
-                                <a href="adopt_process.php?id=<?php echo $row['id']; ?>" class="btn-adopt">Adopt Me</a>
+                                <a href="adoption_form.php?id=<?php echo $row['pet_id']; ?>" class="btn-adopt">Adopt Me</a>
                             <?php else: ?>
                                 <button class="btn-adopt disabled">Not Available</button>
                             <?php endif; ?>
