@@ -33,7 +33,7 @@ $total_price = 0;
     <div class="container cart-container">
         <div class="page-header">
             <h1 class="page-title">Shopping Cart 🛒</h1>
-            <a href="pet_food.php" class="btn-back">← Back to Shop</a>
+            <a href="pet_food.php" class="btn-back-shop">← Back to Shop</a>
         </div>
 
         <?php if (empty($cart)): ?>
