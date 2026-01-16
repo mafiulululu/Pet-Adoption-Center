@@ -3,8 +3,9 @@ session_start();
 include '../../../User/MVC/db/db_conn.php';
 
 // Security Check
+
 if (!isset($_SESSION['user_id']) || strtolower($_SESSION['user_role']) !== 'admin') {
-    header("Location: login.php");
+    header("Location: ../../../User/MVC/html/login.php");
     exit();
 }
 
@@ -49,7 +50,7 @@ $pets = $conn->query("SELECT * FROM pets ORDER BY created_at DESC");
             </div>
             <div class="nav-actions">
                 <a href="home.php" class="btn-secondary">View Site</a>
-                <a href="logout.php" class="btn-logout">Logout</a>
+                <a href="../../../User/MVC/html/login.php" class="btn-logout">Logout</a>
             </div>
         </div>
     </nav>
