@@ -327,7 +327,7 @@ include '../db/db_conn.php';
                             <label for="signup-role" class="input-label">Select Role</label>
                             <div class="input-wrapper">
                                 <select id="signup-role" name="role" class="input-field" style="background-color: #fff;">
-                                    <option value="client">User (Adopter)</option>
+                                    <option value="client">User </option>
                                     <option value="worker">Worker</option>
                                     <option value="admin">Admin</option>
                                 </select>
