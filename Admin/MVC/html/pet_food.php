@@ -18,20 +18,6 @@ $conn->query("CREATE TABLE IF NOT EXISTS pet_food (
     stock_status VARCHAR(20) DEFAULT 'In Stock'
 )");
 
-$check = $conn->query("SELECT count(*) as count FROM pet_food");
-if ($check && $check->fetch_assoc()['count'] == 0) {
-    $insertSql = "INSERT INTO pet_food (name, category, price, image, description, stock_status) VALUES 
-    ('Premium Salmon Kibble', 'cat', 18.99, 'https://images.unsplash.com/photo-1583337130417-3346a1be7dee?auto=format&fit=crop&w=400&q=80', 'Rich in Omega-3 for a shiny coat.', 'In Stock'),
-    ('Gourmet Tuna Paté', 'cat', 2.50, 'https://images.unsplash.com/photo-1514888286974-6c03e2ca1dba?auto=format&fit=crop&w=400&q=80', 'Soft texture, loved by picky eaters.', 'In Stock'),
-    ('Steak & Potato Stew', 'dog', 24.99, 'https://images.unsplash.com/photo-1589924691195-41432c84c161?auto=format&fit=crop&w=400&q=80', 'Hearty chunks of beef with vegetables.', 'In Stock'),
-    ('Puppy Growth Formula', 'dog', 19.50, 'https://images.unsplash.com/photo-1601758228041-f3b2795255f1?auto=format&fit=crop&w=400&q=80', 'Essential nutrients for growing pups.', 'In Stock'),
-    ('Timothy Hay Pellets', 'rabbit', 12.00, 'https://images.unsplash.com/photo-1585110396063-8355845b3728?auto=format&fit=crop&w=400&q=80', 'High fiber diet for healthy digestion.', 'In Stock'),
-    ('Dried Fruit Treats', 'rabbit', 6.99, 'https://images.unsplash.com/photo-1518796745738-41048802f99a?auto=format&fit=crop&w=400&q=80', 'Natural sweet treats for bunnies.', 'Low Stock'),
-    ('Calcium Sticks', 'tortoise', 14.50, 'https://images.unsplash.com/photo-1437622368342-7a3d73a34c8f?auto=format&fit=crop&w=400&q=80', 'Supports shell health and growth.', 'In Stock'),
-    ('Organic Leaf Mix', 'tortoise', 9.00, 'https://images.unsplash.com/photo-1508455858334-95337ba25607?auto=format&fit=crop&w=400&q=80', 'Dried dandelion and plantain leaves.', 'In Stock')";
-    $conn->query($insertSql);
-}
-
 // Handle Filtering
 $category_filter = isset($_GET['category']) ? $_GET['category'] : 'all';
 

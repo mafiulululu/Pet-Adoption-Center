@@ -18,20 +18,6 @@ $conn->query("CREATE TABLE IF NOT EXISTS pet_healthcare (
     stock_status VARCHAR(20) DEFAULT 'In Stock'
 )");
 
-$check = $conn->query("SELECT count(*) as count FROM pet_healthcare");
-if ($check && $check->fetch_assoc()['count'] == 0) {
-    $insertSql = "INSERT INTO pet_healthcare (name, category, price, image, description, stock_status) VALUES 
-    ('Flea & Tick Spot-On', 'cat', 22.50, 'https://images.unsplash.com/photo-1596854407944-bf87f6fdd49e?auto=format&fit=crop&w=400&q=80', 'Monthly treatment to protect your cat.', 'In Stock'),
-    ('Dental Health Treats', 'cat', 8.99, 'https://images.unsplash.com/photo-1571570891039-921399a831cb?auto=format&fit=crop&w=400&q=80', 'Helps reduce tartar and plaque buildup.', 'In Stock'),
-    ('Hip & Joint Supplements', 'dog', 29.99, 'https://images.unsplash.com/photo-1587764379873-9781a94c836b?auto=format&fit=crop&w=400&q=80', 'Supports mobility for active or aging dogs.', 'In Stock'),
-    ('Pet First-Aid Kit', 'dog', 19.99, 'https://images.unsplash.com/photo-1604917621955-1b35571ba882?auto=format&fit=crop&w=400&q=80', 'Essential supplies for minor injuries.', 'Low Stock'),
-    ('Small Animal Nail Clippers', 'rabbit', 11.00, 'https://images.unsplash.com/photo-1591382386627-349b692688ff?auto=format&fit=crop&w=400&q=80', 'Safe and easy-to-use clippers for rabbits.', 'In Stock'),
-    ('Soft Grooming Brush', 'rabbit', 9.50, 'https://images.unsplash.com/photo-1585110396063-8355845b3728?auto=format&fit=crop&w=400&q=80', 'Gentle brush to maintain a healthy coat.', 'In Stock'),
-    ('Calcium + D3 Supplement', 'tortoise', 14.00, 'https://images.unsplash.com/photo-1535083252457-6080fe29be45?auto=format&fit=crop&w=400&q=80', 'Essential powder for shell health.', 'In Stock'),
-    ('Reptile Wound Care', 'tortoise', 12.50, 'https://images.unsplash.com/photo-1437622368342-7a3d73a34c8f?auto=format&fit=crop&w=400&q=80', 'Antiseptic spray for minor cuts and scrapes.', 'Out of Stock')";
-    $conn->query($insertSql);
-}
-
 // Handle Filtering
 $category_filter = isset($_GET['category']) ? $_GET['category'] : 'all';
 

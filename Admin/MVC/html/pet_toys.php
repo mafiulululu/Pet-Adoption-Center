@@ -18,20 +18,6 @@ $conn->query("CREATE TABLE IF NOT EXISTS pet_toys (
     stock_status VARCHAR(20) DEFAULT 'In Stock'
 )");
 
-$check = $conn->query("SELECT count(*) as count FROM pet_toys");
-if ($check && $check->fetch_assoc()['count'] == 0) {
-    $insertSql = "INSERT INTO pet_toys (name, category, price, image, description, stock_status) VALUES 
-    ('Feather Wand Teaser', 'cat', 7.99, 'https://images.unsplash.com/photo-1592194993193-e6a4c118f8f2?auto=format&fit=crop&w=400&q=80', 'Interactive fun for you and your cat.', 'In Stock'),
-    ('Catnip Mouse Trio', 'cat', 5.50, 'https://images.unsplash.com/photo-1548681528-6a5c45b66b42?auto=format&fit=crop&w=400&q=80', 'Filled with premium organic catnip.', 'In Stock'),
-    ('Durable Squeaky Ball', 'dog', 9.99, 'https://images.unsplash.com/photo-1529429617124-95b109e86bb8?auto=format&fit=crop&w=400&q=80', 'A tough ball for endless games of fetch.', 'In Stock'),
-    ('Rope Tug Toy', 'dog', 12.50, 'https://images.unsplash.com/photo-1612536037443-d42c42935438?auto=format&fit=crop&w=400&q=80', 'Great for dental health and tug-of-war.', 'Low Stock'),
-    ('Willow Chew Ball', 'rabbit', 6.00, 'https://images.unsplash.com/photo-1591382386627-349b692688ff?auto=format&fit=crop&w=400&q=80', '100% natural willow, safe for chewing.', 'In Stock'),
-    ('Foraging Mat', 'rabbit', 15.99, 'https://images.unsplash.com/photo-1589952283406-b53a7d1347e8?auto=format&fit=crop&w=400&q=80', 'Encourages natural foraging instincts.', 'In Stock'),
-    ('Treat Dispensing Ball', 'tortoise', 11.50, 'https://images.unsplash.com/photo-1535083252457-6080fe29be45?auto=format&fit=crop&w=400&q=80', 'A slow-release treat ball for enrichment.', 'In Stock'),
-    ('Smooth Basking Rock', 'tortoise', 18.00, 'https://images.unsplash.com/photo-1482401634921-fdeb808e6f7f?auto=format&fit=crop&w=400&q=80', 'A comfortable and safe basking spot.', 'Out of Stock')";
-    $conn->query($insertSql);
-}
-
 // Handle Filtering
 $category_filter = isset($_GET['category']) ? $_GET['category'] : 'all';
 
