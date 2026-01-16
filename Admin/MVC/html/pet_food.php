@@ -59,7 +59,12 @@ $result = $conn->query($sql);
     <div class="container">
         <div class="page-header">
             <h1 class="page-title">Pet Food Shop 🍖</h1>
-            <a href="home.php" class="btn-back">Back to Home</a>
+            <div style="display: flex; gap: 10px;">
+                <a href="pet_toys.php" class="btn-back">Toys</a>
+                <a href="pet_homes.php" class="btn-back">Homes</a>
+                <a href="pet_healthcare.php" class="btn-back">Healthcare</a>
+                <a href="home.php" class="btn-back">Back to Home</a>
+            </div>
         </div>
 
         <!-- Category Filter -->
