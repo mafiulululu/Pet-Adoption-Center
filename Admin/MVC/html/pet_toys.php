@@ -59,6 +59,7 @@ $result = $conn->query($sql);
     <div class="container">
         <div class="page-header">
             <h1 class="page-title">Pet Toys Shop 🎾</h1>
+            <a href="pet_food.php" class="btn-back" style="margin-right: 10px;">Shop Pet Food</a>
             <a href="home.php" class="btn-back">Back to Home</a>
         </div>
 
