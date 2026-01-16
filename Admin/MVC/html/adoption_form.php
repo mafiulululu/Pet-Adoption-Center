@@ -38,6 +38,8 @@ if (isset($pet['type'])) {
 if ($_SERVER['REQUEST_METHOD'] === 'POST') {
     $phone = $conn->real_escape_string($_POST['phone']);
     $address = $conn->real_escape_string($_POST['address']);
+    $full_name = $conn->real_escape_string($user['full_name']);
+    $email = $conn->real_escape_string($user['email']);
 
     // Start Transaction
     $conn->begin_transaction();
@@ -55,7 +57,8 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
         }
 
         // 3. Create Adoption Request
-        $conn->query("INSERT INTO adoption_requests (pet_id, client_id, status) VALUES ($pet_id, $user_id, 'pending')");
+        $sql_request = "INSERT INTO adoption_requests (pet_id, user_id, full_name, email, phone, address, status) VALUES ($pet_id, $user_id, '$full_name', '$email', '$phone', '$address', 'pending')";
+        $conn->query($sql_request);
 
         // 4. Update Pet Status
         $conn->query("UPDATE pets SET adoption_status = 'pending' WHERE pet_id = $pet_id");
