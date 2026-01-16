@@ -94,7 +94,7 @@ $result = $conn->query($sql);
                                     <a href="care_status.php?id=<?php echo $row['pet_id']; ?>" class="btn-adopt" style="background-color: #3498db;">Update Care</a>
                                 </div>
                             <?php elseif($status === 'available'): ?>
-                                <a href="adopt_process.php?id=<?php echo $row['pet_id']; ?>" class="btn-adopt">Adopt Me</a>
+                                <a href="adoption_form.php?id=<?php echo $row['pet_id']; ?>" class="btn-adopt">Adopt Me</a>
                             <?php else: ?>
                                 <button class="btn-adopt disabled">Not Available</button>
                             <?php endif; ?>
