@@ -98,7 +98,14 @@ document.addEventListener('DOMContentLoaded', () => {
 
                 if (data.success) {
                     // ✅ SUCCESS → REDIRECT TO DASHBOARD
-                    window.location.href = 'home.php';
+                    if (data.role && data.role.toLowerCase() === 'admin') {
+                        alert("Hello Admin! You have successfully logged in.");
+                        console.log("Redirecting to admin dashboard...");
+                        window.location.href = '../../../Admin/MVC/html/admin_dashboard.php';
+                    } else {
+                        alert("Hello User! You have successfully logged in.");
+                        window.location.href = 'home.php';
+                    }
                 } else {
                     if (emailError) emailError.innerText = data.emailError || '';
                     if (passError) passError.innerText = data.passwordError || '';
@@ -149,7 +156,11 @@ document.addEventListener('DOMContentLoaded', () => {
 
                     if (data.success) {
                         alert(data.message);
-                        window.location.href = 'home.php';
+                        if (data.role && data.role.toLowerCase() === 'admin') {
+                            window.location.href = 'admin_dashboard.php';
+                        } else {
+                            window.location.href = 'home.php';
+                        }
                     } else {
                         const nameErr = document.getElementById('signupNameError');
                         const emailErr = document.getElementById('signupEmailError');

@@ -199,24 +199,28 @@ session_start();
                     <div class="shop-icon">🍖</div>
                     <h3 class="shop-item-name">Pet Food</h3>
                     <p class="shop-description">Premium quality food for all pets</p>
+                    <a href="Pet_Food.php"><button> View Shop 🛒</button></a>
                 </div>
 
                 <div class="shop-card">
                     <div class="shop-icon">🎾</div>
                     <h3 class="shop-item-name">Toys</h3>
                     <p class="shop-description">Fun toys to keep your pet entertained</p>
+                    <a href="Pet_Toys.php"><button> View Shop 🛒</button></a>
                 </div>
 
                 <div class="shop-card">
                     <div class="shop-icon">🏠</div>
                     <h3 class="shop-item-name">Pet Homes</h3>
                     <p class="shop-description">Comfortable homes and beds</p>
+                    <a href="Pet_Homes.php"><button> View Shop 🛒</button></a>
                 </div>
 
                 <div class="shop-card">
                     <div class="shop-icon">💊</div>
                     <h3 class="shop-item-name">Healthcare</h3>
                     <p class="shop-description">Vitamins and medical supplies</p>
+                    <a href="Pet_Healthcare.php"><button> View Shop 🛒</button></a>
                 </div>
             </div>
         </div>
@@ -257,6 +261,25 @@ session_start();
             const userEmail = "<?php echo isset($_SESSION['user_email']) ? htmlspecialchars($_SESSION['user_email'], ENT_QUOTES, 'UTF-8') : 'N/A'; ?>";
             alert(`--- Your Profile ---\n\n👤 Name: ${userName}\n📧 Email: ${userEmail}`);
         }
+
+        // Theme Toggle Logic
+        const themeToggle = document.getElementById('themeToggle');
+        const htmlElement = document.documentElement;
+        const themeIcon = themeToggle.querySelector('.theme-icon');
+
+        // Load saved theme
+        const savedTheme = localStorage.getItem('theme') || 'light';
+        htmlElement.setAttribute('data-theme', savedTheme);
+        themeIcon.textContent = savedTheme === 'dark' ? '☀️' : '🌙';
+
+        themeToggle.addEventListener('click', () => {
+            const currentTheme = htmlElement.getAttribute('data-theme');
+            const newTheme = currentTheme === 'light' ? 'dark' : 'light';
+            
+            htmlElement.setAttribute('data-theme', newTheme);
+            localStorage.setItem('theme', newTheme);
+            themeIcon.textContent = newTheme === 'dark' ? '☀️' : '🌙';
+        });
 
         // The dashboard.js script might contain other logic, so we keep it.
     </script>

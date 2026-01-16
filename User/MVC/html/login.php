@@ -109,6 +109,7 @@ include '../db/db_conn.php';
             $_SESSION['user_name'] = $name;
             $_SESSION['user_email'] = $email;
             $_SESSION['user_role'] = $role;
+            $response['role'] = $role;
         } else {
             $response['message'] = 'Registration failed: ' . $stmt->error;
         }
@@ -170,6 +171,7 @@ include '../db/db_conn.php';
         $_SESSION['user_name'] = $user['full_name'];
         $_SESSION['user_email'] = $user['email'];
         $_SESSION['user_role'] = $user['role'];
+        $response['role'] = strtolower(trim($user['role']));
 
         // Log login
         $ip_address = $_SERVER['REMOTE_ADDR'];

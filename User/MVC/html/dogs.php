@@ -15,9 +15,9 @@ $conn->query("CREATE TABLE IF NOT EXISTS pets (
     image VARCHAR(255)
 )");
  
-$check = $conn->query("SELECT count(*) as count FROM pets WHERE type = 'dog'");
+$check = $conn->query("SELECT count(*) as count FROM pets WHERE species = 'dog'");
 if ($check && $check->fetch_assoc()['count'] == 0) {
-    $insertSql = "INSERT INTO pets (name, breed, age, status, type, image) VALUES
+    $insertSql = "INSERT INTO pets (name, breed, age, health_status, spacies, image) VALUES
         ('Buddy', 'Golden Retriever', '3 years', 'available', 'dog', 'https://images.unsplash.com/photo-1546685299-e0090bacd7e2?auto=format&fit=crop&w=400&q=80%27),
         ('Lucy', 'Labrador', '4 years', 'available', 'dog', 'https://images.unsplash.com/photo-1583511655826-05700d52f4d9?auto=format&fit=crop&w=400&q=80%27),
         ('Charlie', 'German Shepherd', '2 years', 'adopted', 'dog', 'https://images.unsplash.com/photo-1560807707-8cc7568bd579?auto=format&fit=crop&w=400&q=80%27),
@@ -29,7 +29,7 @@ if ($check && $check->fetch_assoc()['count'] == 0) {
 }
  
 // Fetch dogs from the database
-$sql = "SELECT * FROM pets WHERE type = 'dog' ORDER BY status ASC";
+$sql = "SELECT * FROM pets WHERE species = 'dog'";
 $result = $conn->query($sql);
 ?>
  
@@ -43,6 +43,45 @@ $result = $conn->query($sql);
     <link rel="stylesheet" href="../css/cats.css">
     <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700&display=swap" rel="stylesheet">
 </head>
+<style>
+   .cat-grid {
+    display: grid;
+    grid-template-columns: repeat(auto-fit, minmax(280px, 1fr));
+    gap: 2rem;
+    align-items: stretch;
+}
+
+.dog-card {
+    background: #111827;
+    border-radius: 16px;
+    overflow: hidden;
+    box-shadow: 0 10px 25px rgba(0,0,0,0.4);
+    display: flex;
+    flex-direction: column;
+}
+
+.dog-image {
+    width: 100%;
+    height: 260px;
+    object-fit: cover;
+    display: block;
+}
+
+.cat-details {
+    padding: 1rem;
+    display: flex;
+    flex-direction: column;
+    gap: 0.6rem;
+}
+
+.status-badge {
+    align-self: flex-start;
+    padding: 0.25rem 0.7rem;
+    border-radius: 999px;
+    font-size: 0.8rem;
+}
+
+</style>
 <body>
  
     <div class="container">
