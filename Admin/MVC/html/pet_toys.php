@@ -109,9 +109,12 @@ $result = $conn->query($sql);
                                     <button class="btn-action btn-delete" onclick="return confirm('Delete this item?')">Delete</button>
                                 </div>
                             <?php else: ?>
-                                <button class="btn-buy" <?php echo strtolower($row['stock_status']) == 'out of stock' ? 'disabled' : ''; ?>>
-                                    Add to Cart 🛒
-                                </button>
+                                <form action="cart_action.php" method="POST">
+                                    <input type="hidden" name="action" value="add">
+                                    <input type="hidden" name="id" value="<?php echo $row['id']; ?>">
+                                    <input type="hidden" name="type" value="pet_toys">
+                                    <button type="submit" class="btn-buy" <?php echo strtolower($row['stock_status']) == 'out of stock' ? 'disabled' : ''; ?>>Add to Cart 🛒</button>
+                                </form>
                             <?php endif; ?>
                         </div>
                     </div>
