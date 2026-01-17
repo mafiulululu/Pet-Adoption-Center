@@ -3,6 +3,8 @@ session_start();
  
 // Include database connection
 include '../db/db_conn.php';
+$user_role = $_SESSION['user_role'] ?? 'guest';
+
  
 // AUTOMATIC SETUP: Create table and insert sample data if needed
 $conn->query("CREATE TABLE IF NOT EXISTS pets (
@@ -17,8 +19,8 @@ $conn->query("CREATE TABLE IF NOT EXISTS pets (
  
 $check = $conn->query("SELECT count(*) as count FROM pets WHERE species = 'dog'");
 if ($check && $check->fetch_assoc()['count'] == 0) {
-    $insertSql = "INSERT INTO pets (name, breed, age, health_status, spacies, image) VALUES
-        ('Buddy', 'Golden Retriever', '3 years', 'available', 'dog', 'https://images.unsplash.com/photo-1546685299-e0090bacd7e2?auto=format&fit=crop&w=400&q=80%27),
+    $insertSql = "INSERT INTO pets (name, breed, age, adoption_status, species, image) VALUES
+        ('Buddy', 'Golden Retriever', '3 years', 'available', 'dog', 'https://images.unsplash.com/photo-1601758125946-6ec2ef64daf8?auto=format&fit=crop&w=800&q=80),
         ('Lucy', 'Labrador', '4 years', 'available', 'dog', 'https://images.unsplash.com/photo-1583511655826-05700d52f4d9?auto=format&fit=crop&w=400&q=80%27),
         ('Charlie', 'German Shepherd', '2 years', 'adopted', 'dog', 'https://images.unsplash.com/photo-1560807707-8cc7568bd579?auto=format&fit=crop&w=400&q=80%27),
         ('Daisy', 'Beagle', '1 year', 'available', 'dog', 'https://images.unsplash.com/photo-1517849845537-4d257902454a?auto=format&fit=crop&w=400&q=80%27),
@@ -40,48 +42,9 @@ $result = $conn->query($sql);
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Available Dogs - Pet Adoption Center</title>
     <link rel="stylesheet" href="../css/style.css">
-    <link rel="stylesheet" href="../css/cats.css">
+    <link rel="stylesheet" href="../css/dogs.css">
     <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700&display=swap" rel="stylesheet">
 </head>
-<style>
-   .cat-grid {
-    display: grid;
-    grid-template-columns: repeat(auto-fit, minmax(280px, 1fr));
-    gap: 2rem;
-    align-items: stretch;
-}
-
-.dog-card {
-    background: #111827;
-    border-radius: 16px;
-    overflow: hidden;
-    box-shadow: 0 10px 25px rgba(0,0,0,0.4);
-    display: flex;
-    flex-direction: column;
-}
-
-.dog-image {
-    width: 100%;
-    height: 260px;
-    object-fit: cover;
-    display: block;
-}
-
-.cat-details {
-    padding: 1rem;
-    display: flex;
-    flex-direction: column;
-    gap: 0.6rem;
-}
-
-.status-badge {
-    align-self: flex-start;
-    padding: 0.25rem 0.7rem;
-    border-radius: 999px;
-    font-size: 0.8rem;
-}
-
-</style>
 <body>
  
     <div class="container">
@@ -90,7 +53,7 @@ $result = $conn->query($sql);
             <a href="home.php" class="btn-adopt" style="width: auto; margin: 0; padding: 0.6rem 1.2rem;">Back to Home-Page</a>
         </div>
  
-        <div class="cat-grid">
+        <div class="dog-grid">
             <?php if ($result && $result->num_rows > 0): ?>
                 <?php while($row = $result->fetch_assoc()): ?>
                     <div class="dog-card">
@@ -99,8 +62,8 @@ $result = $conn->query($sql);
                              alt="<?php echo htmlspecialchars($row['name']); ?>"
                              class="dog-image">
                          
-                        <div class="cat-details">
-                            <h3 class="cat-name"><?php echo htmlspecialchars($row['name']); ?></h3>
+                        <div class="dog-details">
+                            <h3 class="dog-name"><?php echo htmlspecialchars($row['name']); ?></h3>
  
                             <div class="dog-meta">
                                 <span>Breed:</span>
@@ -141,7 +104,7 @@ $result = $conn->query($sql);
                     </div>
                 <?php endwhile; ?>
             <?php else: ?>
-                <div class="no-cats-message">
+                <div class="no-dogs-message">
                     <h3>No dogs available for adoption right now.</h3>
                     <p>Please check back later!</p>
                 </div>

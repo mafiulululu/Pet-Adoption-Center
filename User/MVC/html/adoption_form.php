@@ -189,7 +189,7 @@ $user = $result_user->fetch_assoc();
                     <textarea name="address" class="form-input" rows="3" required placeholder="Enter your full address"><?php echo htmlspecialchars($user['address'] ?? ''); ?></textarea>
                 </div>
                 <button type="submit" class="btn-submit">Submit Application</button>
-                <a href="<?php echo $back_link; ?>" class="btn-cancel">Cancel</a>
+                <a href="home.php" class="btn-cancel">Cancel</a>
             </form>
             <?php elseif ($pet['adoption_status'] !== 'available' && empty($message)): ?>
                 <div class="alert error">
