@@ -3,6 +3,7 @@ session_start();
  
 // Include database connection
 include '../db/db_conn.php';
+$user_role = $_SESSION['user_role'] ?? 'guest';
  
 // AUTOMATIC SETUP: Create table and insert sample data if needed
 $conn->query("CREATE TABLE IF NOT EXISTS pets (
@@ -10,26 +11,26 @@ $conn->query("CREATE TABLE IF NOT EXISTS pets (
     name VARCHAR(100) NOT NULL,
     breed VARCHAR(100) NOT NULL,
     age VARCHAR(50),
-    status VARCHAR(20) DEFAULT 'available',
-    type VARCHAR(20) NOT NULL,
+    adoption_status VARCHAR(20) DEFAULT 'available',
+    species VARCHAR(20) NOT NULL,
     image VARCHAR(255)
 )");
  
-$check = $conn->query("SELECT count(*) as count FROM pets WHERE type = 'rabbit'");
+$check = $conn->query("SELECT count(*) as count FROM pets WHERE species = 'rabbit'");
 if ($check && $check->fetch_assoc()['count'] == 0) {
-    $insertSql = "INSERT INTO pets (name, breed, age, status, type, image) VALUES
-        ('Thumper', 'Holland Lop', '1 year', 'available', 'rabbit', 'https://images.unsplash.com/photo-1585110396063-8355845b3728?auto=format&fit=crop&w=400&q=80%27),
-        ('Oreo', 'Dutch Rabbit', '2 years', 'available', 'rabbit', 'https://images.unsplash.com/photo-1518796745738-41048802f99a?auto=format&fit=crop&w=400&q=80%27),
-        ('Snowball', 'Lionhead', '6 months', 'adopted', 'rabbit', 'https://images.unsplash.com/photo-1535241556843-adbd92c4e673?auto=format&fit=crop&w=400&q=80%27),
-        ('Hazel', 'Flemish Giant', '3 years', 'available', 'rabbit', 'https://images.unsplash.com/photo-1559214369-a6b1d7919865?auto=format&fit=crop&w=400&q=80%27),
-        ('Cottontail', 'Netherland Dwarf', '1 year', 'pending', 'rabbit', 'https://images.unsplash.com/photo-1589952283406-b53a7d1347e8?auto=format&fit=crop&w=400&q=80%27),
-        ('Bugs', 'Rex Rabbit', '2 years', 'available', 'rabbit', 'https://images.unsplash.com/photo-1591382386627-349b692688ff?auto=format&fit=crop&w=400&q=80%27)";
+    $insertSql = "INSERT INTO pets (name, breed, age, adoption_status, species, image) VALUES
+        ('Thumper', 'Holland Lop', '1 year', 'available', 'rabbit', 'https://images.unsplash.com/photo-1585110396063-8355845b3728?auto=format&fit=crop&w=400&q=80'),
+        ('Oreo', 'Dutch Rabbit', '2 years', 'available', 'rabbit', 'https://images.unsplash.com/photo-1518796745738-41048802f99a?auto=format&fit=crop&w=400&q=80'),
+        ('Snowball', 'Lionhead', '6 months', 'adopted', 'rabbit', 'https://images.unsplash.com/photo-1535241556843-adbd92c4e673?auto=format&fit=crop&w=400&q=80'),
+        ('Hazel', 'Flemish Giant', '3 years', 'available', 'rabbit', 'https://images.unsplash.com/photo-1559214369-a6b1d7919865?auto=format&fit=crop&w=400&q=80'),
+        ('Cottontail', 'Netherland Dwarf', '1 year', 'pending', 'rabbit', 'https://images.unsplash.com/photo-1589952283406-b53a7d1347e8?auto=format&fit=crop&w=400&q=80'),
+        ('Bugs', 'Rex Rabbit', '2 years', 'available', 'rabbit', 'https://images.unsplash.com/photo-1591382386627-349b692688ff?auto=format&fit=crop&w=400&q=80')";
  
     $conn->query($insertSql);
 }
  
 // Fetch rabbits from the database
-$sql = "SELECT * FROM pets WHERE type = 'rabbit' ORDER BY status ASC";
+$sql = "SELECT * FROM pets WHERE species = 'rabbit' ORDER BY adoption_status ASC";
 $result = $conn->query($sql);
 ?>
  
@@ -76,7 +77,7 @@ $result = $conn->query($sql);
                             <?php
                                 $statusClass = 'status-available';
                                 // Handle potential schema differences
-                                $status = isset($row['adoption_status']) ? $row['adoption_status'] : $row['status'];
+                                $status = $row['adoption_status'];
                                 $status = strtolower($status);
 
                                 if($status == 'adopted') $statusClass = 'status-adopted';
@@ -89,15 +90,17 @@ $result = $conn->query($sql);
                             <!-- Role Based Actions -->
                             <?php if ($user_role === 'admin'): ?>
                                 <div class="admin-actions" style="margin-top: 10px;">
-                                    <a href="edit_pet.php?id=<?php echo $row['pet_id'] ?? $row['id']; ?>" class="btn-adopt" style="background-color: #f39c12;">Edit</a>
-                                    <a href="delete_pet.php?id=<?php echo $row['pet_id'] ?? $row['id']; ?>" class="btn-adopt" style="background-color: #e74c3c;" onclick="return confirm('Delete this pet?')">Delete</a>
+                                    <a href="edit_pet.php?id=<?php echo $row['id']; ?>" class="btn-adopt" style="background-color: #f39c12;">Edit</a>
+                                    <a href="delete_pet.php?id=<?php echo $row['id']; ?>" class="btn-adopt" style="background-color: #e74c3c;" onclick="return confirm('Delete this pet?')">Delete</a>
                                 </div>
                             <?php elseif ($user_role === 'worker'): ?>
                                 <div class="worker-actions" style="margin-top: 10px;">
-                                    <a href="care_status.php?id=<?php echo $row['pet_id'] ?? $row['id']; ?>" class="btn-adopt" style="background-color: #3498db;">Update Care</a>
+                                    <a href="care_status.php?id=<?php echo $row['id']; ?>" class="btn-adopt" style="background-color: #3498db;">Update Care</a>
                                 </div>
                             <?php elseif($status === 'available'): ?>
-                                <a href="adoption_form.php?id=<?php echo $row['pet_id'] ?? $row['id']; ?>" class="btn-adopt">Adopt Me</a>
+                                <a href="adoption_form.php?id=<?= $row['id']; ?>" class="btn-adopt">
+                                    Adopt Me
+                                </a>
                             <?php else: ?>
                                 <button class="btn-adopt disabled">Not Available</button>
                             <?php endif; ?>

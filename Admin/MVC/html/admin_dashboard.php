@@ -80,7 +80,7 @@ $pets = $conn->query("SELECT * FROM pets ORDER BY created_at DESC");
                     <tbody>
                         <?php while($pet = $pets->fetch_assoc()): ?>
                         <tr>
-                            <td>#<?php echo $pet['pet_id']; ?></td>
+                            <td>#<?php echo $pet['id']; ?></td>
                             <td>
                                 <img src="<?php echo !empty($pet['image']) ? htmlspecialchars($pet['image']) : 'https://placekitten.com/50/50'; ?>" 
                                      style="width: 40px; height: 40px; border-radius: 50%; object-fit: cover;">
@@ -95,7 +95,7 @@ $pets = $conn->query("SELECT * FROM pets ORDER BY created_at DESC");
                             </td>
                             <td><?php echo date('M d, Y', strtotime($pet['updated_at'])); ?></td>
                             <td>
-                                <a href="delete_pet.php?id=<?php echo $pet['pet_id']; ?>" 
+                                <a href="delete_pet.php?id=<?php echo $pet['id']; ?>" 
                                    class="btn-sm btn-delete"
                                    onclick="return confirm('Are you sure you want to delete this pet?');">Delete</a>
                             </td>

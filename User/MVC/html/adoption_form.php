@@ -10,11 +10,9 @@ if (!isset($_SESSION['user_id'])) {
 
 $pet_id = isset($_GET['id']) ? intval($_GET['id']) : 0;
 $user_id = $_SESSION['user_id'];
-$message = '';
-$messageType = '';
 
 // Fetch Pet Details
-$sql_pet = "SELECT * FROM pets WHERE pet_id = $pet_id";
+$sql_pet = "SELECT * FROM pets WHERE id = $pet_id";
 $result_pet = $conn->query($sql_pet);
 
 if ($result_pet->num_rows == 0) {
@@ -22,6 +20,7 @@ if ($result_pet->num_rows == 0) {
     exit();
 }
 $pet = $result_pet->fetch_assoc();
+$_SESSION['pet_id'] = $pet['id'];
 
 // Determine back link based on pet type/species
 $back_link = 'cats.php'; // Default
@@ -32,49 +31,6 @@ if (isset($pet['type'])) {
     if ($t === 'tortoise') $back_link = 'tortoises.php';
 } elseif (isset($pet['species']) && strtolower($pet['species']) === 'cat') {
     $back_link = 'cats.php';
-}
-
-// Handle Form Submission
-if ($_SERVER['REQUEST_METHOD'] === 'POST') {
-    $phone = $conn->real_escape_string($_POST['phone']);
-    $address = $conn->real_escape_string($_POST['address']);
-    $full_name = $conn->real_escape_string($user['full_name']);
-    $email = $conn->real_escape_string($user['email']);
-
-    // Start Transaction
-    $conn->begin_transaction();
-
-    try {
-        // 1. Update User Contact Info
-        $conn->query("UPDATE users SET phone_number = '$phone' WHERE user_id = $user_id");
-
-        // 2. Update/Insert Address in User Profile
-        $check_profile = $conn->query("SELECT profile_id FROM user_profiles WHERE user_id = $user_id");
-        if ($check_profile->num_rows > 0) {
-            $conn->query("UPDATE user_profiles SET address = '$address' WHERE user_id = $user_id");
-        } else {
-            $conn->query("INSERT INTO user_profiles (user_id, address) VALUES ($user_id, '$address')");
-        }
-
-        // 3. Create Adoption Request
-        $sql_request = "INSERT INTO adoption_requests (pet_id, user_id, full_name, email, phone, address, status) VALUES ($pet_id, $user_id, '$full_name', '$email', '$phone', '$address', 'pending')";
-        $conn->query($sql_request);
-
-        // 4. Update Pet Status
-        $conn->query("UPDATE pets SET adoption_status = 'pending' WHERE pet_id = $pet_id");
-
-        $conn->commit();
-        $message = "Adoption request submitted successfully! We will contact you soon.";
-        $messageType = "success";
-        
-        // Redirect to cats page after 3 seconds
-        header("refresh:3;url=$back_link");
-
-    } catch (Exception $e) {
-        $conn->rollback();
-        $message = "Error submitting request. Please try again.";
-        $messageType = "error";
-    }
 }
 
 // Fetch User Details for Pre-filling
@@ -140,6 +96,7 @@ $user = $result_user->fetch_assoc();
             <div class="nav-actions">
                 <?php if (isset($_SESSION['user_name'])): ?>
                     <button class="btn-secondary" onclick="alert('Logged in as: <?php echo htmlspecialchars($_SESSION['user_name']); ?>')">My Profile</button>
+                    <a href="my_requests.php" class="btn-secondary" style="text-decoration: none;">My Requests</a>
                 <?php endif; ?>
                 <a href="logout.php" class="btn-logout">Logout</a>
             </div>
@@ -166,12 +123,10 @@ $user = $result_user->fetch_assoc();
             <h1 class="form-title">Adoption Application</h1>
             <p class="form-subtitle">Complete the form below to request adoption.</p>
 
-            <?php if ($message): ?>
-                <div class="alert <?php echo $messageType; ?>"><?php echo $message; ?></div>
-            <?php endif; ?>
-
-            <?php if ($pet['adoption_status'] === 'available' && empty($message)): ?>
-            <form method="POST">
+            <?php if ($pet['adoption_status'] === 'available'): ?>
+            <form method="POST" action="submit_adoption.php">
+                <input type="hidden" name="pet_id" value="<?php echo $pet_id; ?>">
+                <input type="hidden" name="back_link" value="<?php echo htmlspecialchars($back_link); ?>">
                 <div class="form-group">
                     <label class="form-label">Full Name</label>
                     <input type="text" class="form-input" value="<?php echo htmlspecialchars($user['full_name']); ?>" readonly>
@@ -191,7 +146,7 @@ $user = $result_user->fetch_assoc();
                 <button type="submit" class="btn-submit">Submit Application</button>
                 <a href="home.php" class="btn-cancel">Cancel</a>
             </form>
-            <?php elseif ($pet['adoption_status'] !== 'available' && empty($message)): ?>
+            <?php elseif ($pet['adoption_status'] !== 'available'): ?>
                 <div class="alert error">
                     This pet is currently <strong><?php echo ucfirst($pet['adoption_status']); ?></strong> and cannot be adopted.
                 </div>

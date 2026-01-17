@@ -3,6 +3,7 @@ session_start();
 
 // Include database connection
 include '../db/db_conn.php';
+$user_role = $_SESSION['user_role'] ?? 'guest';
 
 // Get User Role
 $user_role = $_SESSION['user_role'] ?? 'client';
@@ -13,14 +14,14 @@ $conn->query("CREATE TABLE IF NOT EXISTS pets (
     name VARCHAR(100) NOT NULL,
     breed VARCHAR(100) NOT NULL,
     age VARCHAR(50),
-    status VARCHAR(20) DEFAULT 'available',
-    type VARCHAR(20) NOT NULL,
+    adoption_status VARCHAR(20) DEFAULT 'available',
+    species VARCHAR(20) NOT NULL,
     image VARCHAR(255)
 )");
 
-$check = $conn->query("SELECT count(*) as count FROM pets WHERE type = 'tortoise'");
+$check = $conn->query("SELECT count(*) as count FROM pets WHERE species = 'tortoise'");
 if ($check && $check->fetch_assoc()['count'] == 0) {
-    $insertSql = "INSERT INTO pets (name, breed, age, status, type, image) VALUES
+    $insertSql = "INSERT INTO pets (name, breed, age, adoption_status, species, image) VALUES
         ('Sheldon', 'Sulcata', '5 years', 'available', 'tortoise', 'https://images.unsplash.com/photo-1508455858334-95337ba25607?auto=format&fit=crop&w=400&q=80'),
         ('Tank', 'Leopard Tortoise', '10 years', 'available', 'tortoise', 'https://images.unsplash.com/photo-1482401634921-fdeb808e6f7f?auto=format&fit=crop&w=400&q=80'),
         ('Speedy', 'Hermann\'s Tortoise', '3 years', 'adopted', 'tortoise', 'https://images.unsplash.com/photo-1535083252457-6080fe29be45?auto=format&fit=crop&w=400&q=80'),
@@ -32,7 +33,7 @@ if ($check && $check->fetch_assoc()['count'] == 0) {
 }
 
 // Fetch tortoises from the database
-$sql = "SELECT * FROM pets WHERE type = 'tortoise' ORDER BY status ASC";
+$sql = "SELECT * FROM pets WHERE species = 'tortoise' ORDER BY adoption_status ASC";
 $result = $conn->query($sql);
 ?>
 
@@ -79,8 +80,7 @@ $result = $conn->query($sql);
                             <?php
                                 $statusClass = 'status-available';
                                 // Handle potential schema differences
-                                $status = isset($row['adoption_status']) ? $row['adoption_status'] : $row['status'];
-                                $status = strtolower($status);
+                                $status = strtolower($row['adoption_status']);
 
                                 if($status == 'adopted') $statusClass = 'status-adopted';
                                 if($status == 'pending') $statusClass = 'status-pending';
@@ -92,15 +92,17 @@ $result = $conn->query($sql);
                             <!-- Role Based Actions -->
                             <?php if ($user_role === 'admin'): ?>
                                 <div class="admin-actions" style="margin-top: 10px;">
-                                    <a href="edit_pet.php?id=<?php echo $row['pet_id'] ?? $row['id']; ?>" class="btn-adopt" style="background-color: #f39c12;">Edit</a>
-                                    <a href="delete_pet.php?id=<?php echo $row['pet_id'] ?? $row['id']; ?>" class="btn-adopt" style="background-color: #e74c3c;" onclick="return confirm('Delete this pet?')">Delete</a>
+                                    <a href="edit_pet.php?id=<?php echo $row['id']; ?>" class="btn-adopt" style="background-color: #f39c12;">Edit</a>
+                                    <a href="delete_pet.php?id=<?php echo $row['id']; ?>" class="btn-adopt" style="background-color: #e74c3c;" onclick="return confirm('Delete this pet?')">Delete</a>
                                 </div>
                             <?php elseif ($user_role === 'worker'): ?>
                                 <div class="worker-actions" style="margin-top: 10px;">
-                                    <a href="care_status.php?id=<?php echo $row['pet_id'] ?? $row['id']; ?>" class="btn-adopt" style="background-color: #3498db;">Update Care</a>
+                                    <a href="care_status.php?id=<?php echo $row['id']; ?>" class="btn-adopt" style="background-color: #3498db;">Update Care</a>
                                 </div>
                             <?php elseif($status === 'available'): ?>
-                                <a href="adoption_form.php?id=<?php echo $row['pet_id'] ?? $row['id']; ?>" class="btn-adopt">Adopt Me</a>
+                                <a href="adoption_form.php?id=<?= $row['id']; ?>" class="btn-adopt">
+                                    Adopt Me
+                                </a>
                             <?php else: ?>
                                 <button class="btn-adopt disabled">Not Available</button>
                             <?php endif; ?>

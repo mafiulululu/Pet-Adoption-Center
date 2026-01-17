@@ -88,15 +88,17 @@ $result = $conn->query($sql);
                             <!-- Role Based Actions -->
                             <?php if ($user_role === 'admin'): ?>
                                 <div class="admin-actions" style="margin-top: 10px;">
-                                    <a href="edit_pet.php?id=<?php echo $row['pet_id']; ?>" class="btn-adopt" style="background-color: #f39c12;">Edit</a>
-                                    <a href="delete_pet.php?id=<?php echo $row['pet_id']; ?>" class="btn-adopt" style="background-color: #e74c3c;" onclick="return confirm('Delete this pet?')">Delete</a>
+                                    <a href="edit_pet.php?id=<?php echo $row['id']; ?>" class="btn-adopt" style="background-color: #f39c12;">Edit</a>
+                                    <a href="delete_pet.php?id=<?php echo $row['id']; ?>" class="btn-adopt" style="background-color: #e74c3c;" onclick="return confirm('Delete this pet?')">Delete</a>
                                 </div>
                             <?php elseif ($user_role === 'worker'): ?>
                                 <div class="worker-actions" style="margin-top: 10px;">
-                                    <a href="care_status.php?id=<?php echo $row['pet_id']; ?>" class="btn-adopt" style="background-color: #3498db;">Update Care</a>
+                                    <a href="care_status.php?id=<?php echo $row['id']; ?>" class="btn-adopt" style="background-color: #3498db;">Update Care</a>
                                 </div>
                             <?php elseif($status === 'available'): ?>
-                                <a href="adoption_form.php?id=<?php echo $row['pet_id']; ?>" class="btn-adopt">Adopt Me</a>
+                                <a href="adoption_form.php?id=<?= $row['id']; ?>" class="btn-adopt">
+                                    Adopt Me
+                                </a>
                             <?php else: ?>
                                 <button class="btn-adopt disabled">Not Available</button>
                             <?php endif; ?>

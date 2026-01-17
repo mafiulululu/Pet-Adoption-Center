@@ -69,6 +69,7 @@ session_start();
             </button>
             <?php if (isset($_SESSION['user_name'])): ?>
                 <button class="btn-secondary" onclick="showProfile()">My Profile</button>
+                <a href="my_requests.php" class="btn-secondary" style="text-decoration: none;">My Requests</a>
             <?php endif; ?>
             <a href="logout.php" class="btn-logout">Logout</a>
         </div>

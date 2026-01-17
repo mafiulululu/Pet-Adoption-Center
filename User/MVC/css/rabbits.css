@@ -25,15 +25,15 @@ body {
     color: #333;
 }
 
-/* Grid Layout for Tortoises */
-.tortoise-grid {
+/* Grid Layout for Rabbits */
+.rabbit-grid {
     display: grid;
     grid-template-columns: repeat(auto-fill, minmax(280px, 1fr));
     gap: 2rem;
 }
 
-/* Tortoise Card */
-.tortoise-card {
+/* Rabbit Card */
+.rabbit-card {
     background: white;
     border-radius: 16px;
     overflow: hidden;
@@ -41,30 +41,30 @@ body {
     transition: transform 0.3s ease, box-shadow 0.3s ease;
 }
 
-.tortoise-card:hover {
+.rabbit-card:hover {
     transform: translateY(-5px);
     box-shadow: 0 8px 25px rgba(0, 0, 0, 0.1);
 }
 
-.tortoise-image {
+.rabbit-image {
     width: 100%;
     height: 220px;
     object-fit: cover;
     background-color: #eee;
 }
 
-.tortoise-details {
+.rabbit-details {
     padding: 1.5rem;
 }
 
-.tortoise-name {
+.rabbit-name {
     font-size: 1.25rem;
     font-weight: 700;
     margin: 0 0 0.5rem 0;
     color: #1a1a1a;
 }
 
-.tortoise-meta {
+.rabbit-meta {
     color: #666;
     font-size: 0.95rem;
     margin-bottom: 0.5rem;
@@ -113,13 +113,13 @@ body {
 }
 
 /* Empty State */
-.no-tortoises-message {
+.no-rabbits-message {
     grid-column: 1/-1;
     text-align: center;
     padding: 3rem;
 }
 
-.no-tortoises-message h3 {
-    color: #27ae60;
+.no-rabbits-message h3 {
+    color: #3498db;
     margin-bottom: 0.5rem;
 }
