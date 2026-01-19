@@ -26,7 +26,7 @@ include '../db/db_conn.php';
         $phone = isset($_POST['phone']) ? trim($_POST['phone']) : '';
         $password = isset($_POST['password']) ? $_POST['password'] : '';
         $confirm_password = isset($_POST['confirm_password']) ? $_POST['confirm_password'] : '';
-        $role = isset($_POST['role']) ? trim($_POST['role']) : 'client';
+        $role = 'client';
 
         $hasError = false;
 
@@ -85,10 +85,6 @@ include '../db/db_conn.php';
 
         // Insert User
         $hashed = password_hash($password, PASSWORD_DEFAULT);
-        
-        // Validate Role
-        $allowed_roles = ['admin', 'worker', 'client'];
-        if (!in_array($role, $allowed_roles)) $role = 'client';
         
         $status = 'active';
         $stmt = $conn->prepare("INSERT INTO users (full_name, email, phone_number, password_hash, role, status) VALUES (?, ?, ?, ?, ?, ?)");
@@ -323,17 +319,6 @@ include '../db/db_conn.php';
                                     placeholder=" " required>
                             </div>
                             <span class="error-msg" id="signupNameError"></span>
-                        </div>
-
-                        <div class="input-group">
-                            <label for="signup-role" class="input-label">Select Role</label>
-                            <div class="input-wrapper">
-                                <select id="signup-role" name="role" class="input-field" style="background-color: #fff;">
-                                    <option value="client">User </option>
-                                    <option value="worker">Worker</option>
-                                    <option value="admin">Admin</option>
-                                </select>
-                            </div>
                         </div>
 
                         <div class="input-group">
