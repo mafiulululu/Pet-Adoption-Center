@@ -95,7 +95,7 @@ $total_price = 0;
                         <span>Total</span>
                         <span>$<?php echo number_format($total_price * 1.05, 2); ?></span>
                     </div>
-                    <button class="btn-checkout">Proceed to Checkout</button>
+                    <a href="checkout.php" class="btn-checkout" style="text-decoration: none; display: block; text-align: center;">Proceed to Checkout</a>
                 </div>
             </div>
         <?php endif; ?>
