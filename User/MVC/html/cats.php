@@ -31,7 +31,7 @@ if ($check && $check->fetch_assoc()['count'] == 0) {
 }
 
 // 3. FETCH DATA
-$sql = "SELECT * FROM pets WHERE species = 'dog'";
+$sql = "SELECT * FROM pets WHERE species = 'cat'";
 $result = $conn->query($sql);
 ?>
 
