@@ -1,3 +1,195 @@
+<?php
+session_start();
+
+// Handle AJAX Login Request
+if ($_SERVER['REQUEST_METHOD'] === 'POST') {
+    header('Content-Type: application/json');
+    
+    // Database connection  
+include '../db/db_conn.php'; 
+
+    $response = [
+        'success' => false,
+        'emailError' => '',
+        'passwordError' => '',
+        'nameError' => '',
+        'phoneError' => '',
+        'confirmError' => '',
+        'message' => ''
+    ];
+
+    $action = $_POST['action'] ?? 'login';
+
+    if ($action === 'register') {
+        $name = isset($_POST['name']) ? trim($_POST['name']) : '';
+        $email = isset($_POST['email']) ? trim($_POST['email']) : '';
+        $phone = isset($_POST['phone']) ? trim($_POST['phone']) : '';
+        $password = isset($_POST['password']) ? $_POST['password'] : '';
+        $confirm_password = isset($_POST['confirm_password']) ? $_POST['confirm_password'] : '';
+        $role = 'client';
+
+        $hasError = false;
+
+        if (empty($name)) {
+            $response['nameError'] = 'Name is required';
+            $hasError = true;
+        } elseif (strlen($name) < 2) {
+
+            $response['nameError'] = 'Name must be at least 2 characters';
+
+            $hasError = true;
+        }
+
+        if (empty($email)) {
+            $response['emailError'] = 'Email is required';
+            $hasError = true;
+        } elseif (!filter_var($email, FILTER_VALIDATE_EMAIL)) {
+            $response['emailError'] = 'Invalid email format';
+            $hasError = true;
+        }
+
+        if (empty($phone)) {
+            $response['phoneError'] = 'Phone number is required';
+            $hasError = true;
+        }
+
+        if (empty($password)) {
+            $response['passwordError'] = 'Password is required';
+            $hasError = true;
+        } elseif (strlen($password) < 6) {
+            $response['passwordError'] = 'Password must be at least 6 characters';
+            $hasError = true;
+        }
+
+        if ($password !== $confirm_password) {
+            $response['confirmError'] = 'Passwords do not match';
+            $hasError = true;
+        }
+
+        if ($hasError) {
+            echo json_encode($response);
+            exit;
+        }
+
+        // Check if email exists
+        $stmt = $conn->prepare("SELECT user_id FROM users WHERE email = ?");
+        $stmt->bind_param("s", $email);
+        $stmt->execute();
+        $stmt->store_result();
+        if ($stmt->num_rows > 0) {
+            $response['emailError'] = 'Email already exists';
+            echo json_encode($response);
+            exit;
+        }
+        $stmt->close();
+
+        // Insert User
+        $hashed = password_hash($password, PASSWORD_DEFAULT);
+        
+        $status = 'active';
+        $stmt = $conn->prepare("INSERT INTO users (full_name, email, phone_number, password_hash, role, status) VALUES (?, ?, ?, ?, ?, ?)");
+        
+        if (!$stmt) {
+            $response['message'] = 'Database prepare error: ' . $conn->error;
+            echo json_encode($response);
+            exit;
+        }
+
+        $stmt->bind_param("ssssss", $name, $email, $phone, $hashed, $role, $status);
+
+        if ($stmt->execute()) {
+            
+            $response['success'] = true;
+            $response['message'] = 'Registration successful';
+            $_SESSION['user_id'] = $stmt->insert_id;
+            $_SESSION['user_name'] = $name;
+            $_SESSION['user_email'] = $email;
+            $_SESSION['user_role'] = $role;
+            $response['role'] = $role;
+        } else {
+            $response['message'] = 'Registration failed: ' . $stmt->error;
+        }
+        $stmt->close();
+        $conn->close();
+        echo json_encode($response);
+        exit;
+    }
+
+    $email = isset($_POST['email']) ? trim($_POST['email']) : '';
+    $password = isset($_POST['password']) ? $_POST['password'] : '';
+    $remember = isset($_POST['remember']) ? true : false;
+
+    $hasError = false;
+
+    if (empty($email)) {
+        $response['emailError'] = 'Email is required';
+        $hasError = true;
+    } elseif (!filter_var($email, FILTER_VALIDATE_EMAIL)) {
+        $response['emailError'] = 'Invalid email format';
+        $hasError = true;
+    }
+
+    if (empty($password)) {
+        $response['passwordError'] = 'Password is required';
+        $hasError = true;
+    }
+
+    if ($hasError) {
+        echo json_encode($response);
+        exit;
+    }
+
+    // Prepare statement
+    $stmt = $conn->prepare("SELECT user_id, full_name, email, password_hash, role, status FROM users WHERE email = ?");
+    $stmt->bind_param("s", $email);
+    $stmt->execute();
+    $result = $stmt->get_result();
+
+    if ($result->num_rows === 0) {
+        $response['emailError'] = 'No account found with this email';
+        echo json_encode($response);
+        exit;
+    }
+
+    $user = $result->fetch_assoc();
+
+    if ($user['status'] === 'blocked') {
+        $response['message'] = 'Your account has been blocked.';
+        echo json_encode($response);
+        exit;
+    }
+
+    if (password_verify($password, $user['password_hash'])) {
+        $response['success'] = true;
+        $response['message'] = 'Login successful';
+        
+        $_SESSION['user_id'] = $user['user_id'];
+        $_SESSION['user_name'] = $user['full_name'];
+        $_SESSION['user_email'] = $user['email'];
+        $_SESSION['user_role'] = $user['role'];
+        $response['role'] = strtolower(trim($user['role']));
+
+        // Log login
+        $ip_address = $_SERVER['REMOTE_ADDR'];
+        $logStmt = $conn->prepare("INSERT INTO login_logs (user_id, ip_address) VALUES (?, ?)");
+        $logStmt->bind_param("is", $user['user_id'], $ip_address);
+        $logStmt->execute();
+        $logStmt->close();
+
+        if ($remember) {
+            setcookie('remember_token', bin2hex(random_bytes(32)), time() + (86400 * 30), "/");
+        }
+    } else {
+        $response['passwordError'] = 'Incorrect password';
+    }
+
+    $stmt->close();
+    $conn->close();
+    
+    echo json_encode($response);
+    exit;
+}
+?>
 <!DOCTYPE html>
 <html lang="en">
 
@@ -6,7 +198,7 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Pet Adoption Center - Welcome</title>
     <meta name="description" content="Join Pet Adoption Center - Find your perfect furry companion">
-    <link rel="stylesheet" href="style.css">
+    <link rel="stylesheet" href="../css/style.css">
     <link rel="preconnect" href="https://fonts.googleapis.com">
     <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
     <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700&display=swap" rel="stylesheet">
@@ -70,6 +262,7 @@
                     </div>
 
                     <form id="loginForm" action="login.php" method="POST">
+                        <input type="hidden" name="action" value="login">
                         <div class="input-group">
                             <label for="login-email" class="input-label">Email Address</label>
                             <div class="input-wrapper">
@@ -117,12 +310,13 @@
                         <p class="form-subtitle">Join us to start your pet adoption journey</p>
                     </div>
 
-                    <form id="signupForm" action="register.php" method="POST">
+                    <form id="signupForm" action="login.php" method="POST">
+                        <input type="hidden" name="action" value="register">
                         <div class="input-group">
                             <label for="signup-name" class="input-label">Full Name</label>
                             <div class="input-wrapper">
                                 <input type="text" id="signup-name" name="name" class="input-field"
-                                    placeholder="Mafi" required>
+                                    placeholder=" " required>
                             </div>
                             <span class="error-msg" id="signupNameError"></span>
                         </div>
@@ -134,6 +328,15 @@
                                     placeholder="you@example.com" required>
                             </div>
                             <span class="error-msg" id="signupEmailError"></span>
+                        </div>
+
+                        <div class="input-group">
+                            <label for="signup-phone" class="input-label">Phone Number</label>
+                            <div class="input-wrapper">
+                                <input type="tel" id="signup-phone" name="phone" class="input-field"
+                                    placeholder="+880-" required>
+                            </div>
+                            <span class="error-msg" id="signupPhoneError"></span>
                         </div>
 
                         <div class="input-group">
@@ -191,7 +394,7 @@
 
     <!-- Footer -->
     <footer class="main-footer">
-        <p class="copyright">&copyright; 2025 Pet Adoption Center. All rights reserved.</p>
+        <p class="copyright">&copy; 2025 Pet Adoption Center. All rights reserved.</p>
     </footer>
 
     <script src="script.js"></script>

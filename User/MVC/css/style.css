@@ -1,0 +1,633 @@
+/* ===========================
+   MINIMAL & CLASSY DESKTOP DESIGN
+   =========================== */
+
+* {
+    margin: 0;
+    padding: 0;
+    box-sizing: border-box;
+}
+
+:root {
+    /* Elegant Color Palette */
+    --primary: #FF1B6B;
+    --secondary: #45CAFF;
+    --dark: #1a1a2e;
+    --darker: #16213e;
+    --accent: #0f3460;
+
+    /* Neutral Colors */
+    --white: #ffffff;
+    --gray-50: #f9fafb;
+    --gray-100: #f3f4f6;
+    --gray-200: #e5e7eb;
+    --gray-300: #d1d5db;
+    --gray-400: #9ca3af;
+    --gray-500: #6b7280;
+    --gray-600: #4b5563;
+    --gray-700: #374151;
+    --gray-800: #1f2937;
+    --gray-900: #111827;
+
+    /* Typography */
+    --font-family: 'Inter', -apple-system, BlinkMacSystemFont, 'Segoe UI', sans-serif;
+
+    /* Transitions */
+    --transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1);
+}
+
+body {
+    font-family: var(--font-family);
+    background: linear-gradient(135deg, #0f0f1e 0%, #1a1a2e 100%);
+    min-height: 100vh;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    color: var(--gray-900);
+    -webkit-font-smoothing: antialiased;
+    -moz-osx-font-smoothing: grayscale;
+    padding-bottom: 60px;
+    /* Space for footer */
+}
+
+/* ===========================
+   MAIN CONTAINER (SPLIT LAYOUT)
+   =========================== */
+.main-container {
+    display: flex;
+    width: 100%;
+    max-width: 1400px;
+    height: 85vh;
+    min-height: 650px;
+    max-height: 900px;
+    margin: 2rem;
+    border-radius: 24px;
+    overflow: hidden;
+    box-shadow: 0 20px 60px rgba(0, 0, 0, 0.3);
+}
+
+/* ===========================
+   LEFT PANEL (BRANDING)
+   =========================== */
+.left-panel {
+    flex: 1;
+    background: linear-gradient(135deg, #FF1B6B 0%, #C71585 50%, #45CAFF 100%);
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    padding: 4rem;
+    position: relative;
+    overflow: hidden;
+}
+
+.left-panel::before {
+    content: '';
+    position: absolute;
+    top: -50%;
+    left: -50%;
+    width: 200%;
+    height: 200%;
+    background: radial-gradient(circle, rgba(255, 255, 255, 0.1) 1px, transparent 1px);
+    background-size: 50px 50px;
+    opacity: 0.3;
+}
+
+.brand-content {
+    position: relative;
+    z-index: 1;
+    text-align: center;
+    max-width: 500px;
+}
+
+.logo-container {
+    margin-bottom: 2.5rem;
+}
+
+.brand-logo {
+    width: 120px;
+    height: 120px;
+    filter: drop-shadow(0 10px 30px rgba(0, 0, 0, 0.2));
+}
+
+.brand-title {
+    font-size: 3rem;
+    font-weight: 700;
+    color: var(--white);
+    margin-bottom: 1rem;
+    letter-spacing: -1px;
+    text-shadow: 0 4px 20px rgba(0, 0, 0, 0.2);
+}
+
+.brand-tagline {
+    font-size: 1.25rem;
+    color: rgba(255, 255, 255, 0.9);
+    margin-bottom: 3rem;
+    font-weight: 300;
+    line-height: 1.6;
+}
+
+.features-list {
+    display: flex;
+    flex-direction: column;
+    gap: 1.5rem;
+}
+
+.feature-item {
+    display: flex;
+    align-items: center;
+    gap: 1rem;
+    padding: 1.25rem;
+    background: rgba(255, 255, 255, 0.15);
+    backdrop-filter: blur(10px);
+    border-radius: 16px;
+    border: 1px solid rgba(255, 255, 255, 0.2);
+    transition: var(--transition);
+}
+
+.feature-item:hover {
+    background: rgba(255, 255, 255, 0.25);
+    transform: translateX(10px);
+}
+
+.feature-icon {
+    font-size: 2rem;
+    flex-shrink: 0;
+}
+
+.feature-text {
+    color: var(--white);
+    font-size: 1rem;
+    font-weight: 500;
+    text-align: left;
+}
+
+/* ===========================
+   RIGHT PANEL (FORMS)
+   =========================== */
+.right-panel {
+    flex: 1;
+    background: var(--white);
+    display: flex;
+    align-items: flex-start;
+    justify-content: center;
+    padding: 2rem;
+    overflow-y: auto;
+    max-height: 90vh;
+}
+
+.form-container {
+    width: 100%;
+    max-width: 480px;
+    padding: 2rem 0;
+}
+
+/* Custom Scrollbar */
+.right-panel::-webkit-scrollbar {
+    width: 8px;
+}
+
+.right-panel::-webkit-scrollbar-track {
+    background: var(--gray-100);
+}
+
+.right-panel::-webkit-scrollbar-thumb {
+    background: var(--gray-300);
+    border-radius: 10px;
+}
+
+.right-panel::-webkit-scrollbar-thumb:hover {
+    background: var(--gray-400);
+}
+
+/* ===========================
+   TAB NAVIGATION
+   =========================== */
+.auth-tabs {
+    display: flex;
+    gap: 1rem;
+    margin-bottom: 3rem;
+}
+
+.auth-tab {
+    flex: 1;
+    padding: 1rem 2rem;
+    background: transparent;
+    border: 2px solid var(--gray-200);
+    border-radius: 12px;
+    font-family: var(--font-family);
+    font-size: 1rem;
+    font-weight: 600;
+    color: var(--gray-500);
+    cursor: pointer;
+    transition: var(--transition);
+}
+
+.auth-tab:hover {
+    border-color: var(--gray-300);
+    color: var(--gray-700);
+}
+
+.auth-tab.active {
+    background: linear-gradient(135deg, #FF1B6B 0%, #45CAFF 100%);
+    border-color: transparent;
+    color: var(--white);
+    box-shadow: 0 4px 20px rgba(255, 27, 107, 0.3);
+}
+
+/* ===========================
+   FORM CONTENT
+   =========================== */
+.form-content {
+    display: none;
+    animation: fadeIn 0.4s ease;
+}
+
+.form-content.active {
+    display: block;
+}
+
+@keyframes fadeIn {
+    from {
+        opacity: 0;
+        transform: translateY(10px);
+    }
+
+    to {
+        opacity: 1;
+        transform: translateY(0);
+    }
+}
+
+.form-header {
+    margin-bottom: 2.5rem;
+}
+
+.form-title {
+    font-size: 2rem;
+    font-weight: 700;
+    color: var(--gray-900);
+    margin-bottom: 0.5rem;
+    letter-spacing: -0.5px;
+}
+
+.form-subtitle {
+    font-size: 1rem;
+    color: var(--gray-500);
+    font-weight: 400;
+}
+
+/* ===========================
+   FORM INPUTS
+   =========================== */
+form {
+    display: flex;
+    flex-direction: column;
+    gap: 1.5rem;
+}
+
+.input-group {
+    display: flex;
+    flex-direction: column;
+    gap: 0.5rem;
+}
+
+.input-label {
+    font-size: 0.9rem;
+    font-weight: 600;
+    color: var(--gray-700);
+    margin-bottom: 0.25rem;
+}
+
+.input-field {
+    width: 100%;
+    padding: 0.875rem 1rem;
+    background: var(--white);
+    border: 2px solid var(--gray-200);
+    border-radius: 10px;
+    font-family: var(--font-family);
+    font-size: 1rem;
+    color: var(--gray-900);
+    transition: var(--transition);
+}
+
+.input-field::placeholder {
+    color: var(--gray-400);
+}
+
+.input-field:hover {
+    border-color: var(--gray-300);
+}
+
+.input-field:focus {
+    outline: none;
+    border-color: var(--primary);
+    box-shadow: 0 0 0 4px rgba(255, 27, 107, 0.1);
+}
+
+.password-wrapper,
+.input-wrapper {
+    position: relative;
+    display: flex;
+    align-items: center;
+    width: 100%;
+}
+
+.password-toggle {
+    position: absolute;
+    right: 0.75rem;
+    background: none;
+    border: none;
+    cursor: pointer;
+    padding: 0.5rem;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    color: var(--gray-400);
+    transition: var(--transition);
+    border-radius: 6px;
+}
+
+.password-toggle:hover {
+    color: var(--gray-600);
+    background: var(--gray-100);
+}
+
+.eye-icon {
+    width: 20px;
+    height: 20px;
+}
+
+.error-msg {
+    font-size: 0.85rem;
+    color: #dc2626;
+    min-height: 20px;
+    opacity: 0;
+    transition: opacity 0.3s ease;
+    margin-top: 0.25rem;
+}
+
+.error-msg.show {
+    opacity: 1;
+}
+
+/* ===========================
+   FORM OPTIONS
+   =========================== */
+.form-options {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    margin-top: -0.5rem;
+}
+
+.remember-check {
+    display: flex;
+    align-items: center;
+    gap: 0.5rem;
+    cursor: pointer;
+    user-select: none;
+}
+
+.remember-check input[type="checkbox"] {
+    display: none;
+}
+
+.checkmark {
+    width: 20px;
+    height: 20px;
+    border: 2px solid var(--gray-300);
+    border-radius: 6px;
+    position: relative;
+    transition: var(--transition);
+    flex-shrink: 0;
+}
+
+.remember-check:hover .checkmark {
+    border-color: var(--primary);
+}
+
+.remember-check input[type="checkbox"]:checked+.checkmark {
+    background: linear-gradient(135deg, #FF1B6B 0%, #45CAFF 100%);
+    border-color: transparent;
+}
+
+.remember-check input[type="checkbox"]:checked+.checkmark::after {
+    content: '✓';
+    position: absolute;
+    top: 50%;
+    left: 50%;
+    transform: translate(-50%, -50%);
+    color: white;
+    font-size: 12px;
+    font-weight: bold;
+}
+
+.check-label {
+    font-size: 0.9rem;
+    color: var(--gray-600);
+    font-weight: 500;
+}
+
+.terms-check {
+    margin-top: 0.5rem;
+    margin-bottom: 0.5rem;
+}
+
+.terms-link {
+    color: var(--primary);
+    text-decoration: none;
+    font-weight: 600;
+    transition: var(--transition);
+}
+
+.terms-link:hover {
+    text-decoration: underline;
+}
+
+.forgot-password {
+    font-size: 0.9rem;
+    color: var(--primary);
+    text-decoration: none;
+    font-weight: 600;
+    transition: var(--transition);
+}
+
+.forgot-password:hover {
+    text-decoration: underline;
+}
+
+/* ===========================
+   PRIMARY BUTTON
+   =========================== */
+.btn-primary {
+    width: 100%;
+    padding: 1rem;
+    background: linear-gradient(135deg, #FF1B6B 0%, #45CAFF 100%);
+    border: none;
+    border-radius: 10px;
+    color: var(--white);
+    font-family: var(--font-family);
+    font-size: 1.05rem;
+    font-weight: 700;
+    cursor: pointer;
+    transition: var(--transition);
+    margin-top: 0.5rem;
+    box-shadow: 0 4px 20px rgba(255, 27, 107, 0.3);
+}
+
+.btn-primary:hover {
+    transform: translateY(-2px);
+    box-shadow: 0 8px 30px rgba(255, 27, 107, 0.4);
+}
+
+.btn-primary:active {
+    transform: translateY(0);
+}
+
+.btn-primary:disabled {
+    opacity: 0.6;
+    cursor: not-allowed;
+    transform: none;
+}
+
+.btn-primary.success {
+    background: linear-gradient(135deg, #10b981 0%, #059669 100%);
+    box-shadow: 0 4px 20px rgba(16, 185, 129, 0.3);
+}
+
+/* ===========================
+   FORM FOOTER
+   =========================== */
+.form-footer {
+    margin-top: 1.5rem;
+    text-align: center;
+}
+
+.footer-text {
+    font-size: 0.95rem;
+    color: var(--gray-600);
+}
+
+.switch-form {
+    color: var(--primary);
+    text-decoration: none;
+    font-weight: 600;
+    transition: var(--transition);
+}
+
+.switch-form:hover {
+    text-decoration: underline;
+}
+
+/* ===========================
+   MAIN FOOTER
+   =========================== */
+.main-footer {
+    position: fixed;
+    bottom: 0;
+    left: 0;
+    right: 0;
+    padding: 1rem;
+    background: rgba(0, 0, 0, 0.5);
+    backdrop-filter: blur(10px);
+    text-align: center;
+    z-index: 100;
+}
+
+.copyright {
+    font-size: 0.875rem;
+    color: rgba(255, 255, 255, 0.8);
+    margin: 0;
+}
+
+/* ===========================
+   ANIMATIONS
+   =========================== */
+@keyframes shake {
+
+    0%,
+    100% {
+        transform: translateX(0);
+    }
+
+    25% {
+        transform: translateX(-8px);
+    }
+
+    75% {
+        transform: translateX(8px);
+    }
+}
+
+.shake {
+    animation: shake 0.4s ease;
+}
+
+/* ===========================
+   RESPONSIVE DESIGN
+   =========================== */
+@media (max-width: 1200px) {
+    .main-container {
+        flex-direction: column;
+        height: auto;
+        max-width: 600px;
+        margin: 1rem;
+    }
+
+    .left-panel {
+        padding: 3rem 2rem;
+    }
+
+    .brand-title {
+        font-size: 2.5rem;
+    }
+
+    .features-list {
+        display: none;
+    }
+
+    .right-panel {
+        padding: 3rem 2rem;
+    }
+}
+
+@media (max-width: 640px) {
+    .main-container {
+        margin: 0.5rem;
+        border-radius: 16px;
+    }
+
+    .left-panel,
+    .right-panel {
+        padding: 2rem 1.5rem;
+    }
+
+    .brand-title {
+        font-size: 2rem;
+    }
+
+    .brand-tagline {
+        font-size: 1rem;
+    }
+
+    .form-title {
+        font-size: 1.75rem;
+    }
+
+    .auth-tab {
+        padding: 0.875rem 1.5rem;
+        font-size: 0.95rem;
+    }
+}
+
+/* ===========================
+   ACCESSIBILITY
+   =========================== */
+:focus-visible {
+    outline: 2px solid var(--primary);
+    outline-offset: 2px;
+}
+
+button:focus-visible {
+    outline-offset: 4px;
+}
