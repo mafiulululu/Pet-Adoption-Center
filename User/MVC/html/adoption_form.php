@@ -8,11 +8,11 @@ if (!isset($_SESSION['user_id'])) {
     exit();
 }
 
-$pet_id = isset($_GET['pet_id']) ? intval($_GET['pet_id']) : 0;
+$pet_id = isset($_GET['id']) ? intval($_GET['id']) : 0;
 $user_id = $_SESSION['user_id'];
 
 // Fetch Pet Details
-$sql_pet = "SELECT * FROM pets WHERE id = $pet_id";
+$sql_pet = "SELECT * FROM pets WHERE pet_id = $pet_id";
 $result_pet = $conn->query($sql_pet);
 
 if (!$result_pet) {
@@ -20,7 +20,7 @@ if (!$result_pet) {
 }
 
 $pet = $result_pet->fetch_assoc();
-$_SESSION['pet_id'] = $pet['id'];
+$_SESSION['pet_id'] = $pet['pet_id'];
 
 // Determine back link based on pet type/species
 $back_link = 'cats.php'; // Default
