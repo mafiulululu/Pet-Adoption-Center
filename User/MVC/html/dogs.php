@@ -40,7 +40,7 @@ if ($check && $check->fetch_assoc()['count'] == 0) {
 /* ===============================
    FETCH DOGS
    =============================== */
-$result = $conn->query("SELECT * FROM pets WHERE species = 'dogs'");
+$result = $conn->query("SELECT * FROM pets WHERE species = 'dog'");
 ?>
 <!DOCTYPE html>
 <html lang="en">
